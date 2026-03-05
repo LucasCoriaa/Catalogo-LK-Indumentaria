@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LK Indumentaria — Ropa Oficial de Fútbol</title>
-  <link rel="icon" type="image/jpeg" href="logo.jpeg">
+  <link rel="icon" type="image/png" href="logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -31,7 +31,7 @@
     <div class="nav-right">
       <!-- Carrito: solo ícono + badge -->
       <button class="cart-btn" onclick="toggleCart()" title="Ver carrito">
-        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
           <line x1="3" y1="6" x2="21" y2="6"/>
           <path d="M16 10a4 4 0 01-8 0"/>
@@ -44,7 +44,7 @@
   <!-- ══════════════════ HERO ══════════════════ -->
   <section class="hero">
     <img class="hero-logo" data-logo src="" alt="LK Indumentaria">
- 
+    <div class="hero-tag">⚽ Temporada 2025/26 — Colección Oficial</div>
     <h1>VISTE COMO CAMPEÓN</h1>
     <p>Indumentaria oficial de los clubes más grandes del mundo. Calidad premium, diseño auténtico.</p>
     <div class="hero-stats">
@@ -63,16 +63,56 @@
     </div>
   </section>
 
-  <!-- ══════════════════ FILTER TABS ══════════════════ -->
-  <section class="filter-section">
-    <div class="section-title">Catálogo</div>
-    <div class="filter-tabs">
-      <button class="filter-tab active" onclick="filterProducts('all', this)">Todos</button>
-      <button class="filter-tab" onclick="filterProducts('camiseta', this)">Camisetas</button>
-      <button class="filter-tab" onclick="filterProducts('short', this)">Shorts</button>
-      <button class="filter-tab" onclick="filterProducts('argentina', this)">Argentina</button>
-      <button class="filter-tab" onclick="filterProducts('retro', this)">Retro</button>
+  <!-- ══════════════════ FILTER / SEARCH BAR ══════════════════ -->
+  <section class="filter-section" id="catalog-section">
+    <div class="catalog-toolbar">
+
+      <!-- Buscador -->
+      <div class="search-wrap">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input class="search-input" id="searchInput" type="text" placeholder="Buscar producto, club o talle…" oninput="handleSearch(this.value)" autocomplete="off">
+        <button class="search-clear" id="searchClear" onclick="clearSearch()" title="Limpiar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Ordenar -->
+      <div class="sort-wrap">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="9" y1="18" x2="15" y2="18"/></svg>
+        <select class="sort-select" id="sortSelect" onchange="handleSort(this.value)">
+          <option value="default">Ordenar</option>
+          <option value="price-asc">Menor precio</option>
+          <option value="price-desc">Mayor precio</option>
+          <option value="name-asc">A → Z</option>
+          <option value="name-desc">Z → A</option>
+        </select>
+      </div>
+
+      <!-- Menú 3 puntos con filtros -->
+      <div class="filter-menu-wrap" id="filterMenuWrap">
+        <button class="filter-menu-btn" id="filterMenuBtn" onclick="toggleFilterMenu()" title="Filtrar por categoría">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="filter-dropdown" id="filterDropdown">
+          <div class="filter-dropdown-title">Categoría</div>
+          <button class="filter-option active" data-filter="all"       onclick="selectFilter('all', this)">Todos</button>
+          <button class="filter-option"         data-filter="camiseta" onclick="selectFilter('camiseta', this)">Camisetas</button>
+          <button class="filter-option"         data-filter="short"    onclick="selectFilter('short', this)">Shorts</button>
+          <button class="filter-option"         data-filter="argentina" onclick="selectFilter('argentina', this)">Argentina</button>
+          <button class="filter-option"         data-filter="retro"    onclick="selectFilter('retro', this)">Retro</button>
+        </div>
+      </div>
+
     </div>
+
+    <!-- Chip del filtro activo -->
+    <div class="active-filter-chip" id="activeFilterChip" style="display:none">
+      <span id="activeFilterLabel"></span>
+      <button onclick="selectFilter('all', document.querySelector('.filter-option[data-filter=all]'))">✕</button>
+    </div>
+
   </section>
 
   <!-- ══════════════════ CATALOG ══════════════════ -->
@@ -107,8 +147,9 @@
   <div class="fab-group">
     <!-- Scroll to top — aparece solo cuando bajás -->
     <button class="fab-scroll-top" id="fabScrollTop" onclick="scrollToTop()" title="Volver arriba">
-      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24">
-        <polyline points="18 15 12 9 6 15"/>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="19" x2="12" y2="5"/>
+        <polyline points="5 12 12 5 19 12"/>
       </svg>
     </button>
     <!-- WhatsApp — solo ícono -->
