@@ -1,9 +1,9 @@
 const LOGO = "img/WhatsApp_Image_2026-02-24_at_19.08.37-removebg-preview.png";
 const WA_NUMBER = '5491156680527';
-const JUGADOR_EXTRA_CAMISETA = 5000;
+const JUGADOR_EXTRA_CAMISETA = 3000;
 const JUGADOR_EXTRA_SHORT    = 7000;
-const DORSAL_EXTRA           = 5000;
-
+const DORSAL_EXTRA           = 7000;
+const DORSAL_EXTRA_SHORTS    = 3000;
 const products = [
   {
     id: "cam-arg-mundial",
@@ -180,7 +180,7 @@ const products = [
     price: 35000,
     badge: 'new',
     badgeType: 'new',
-    img: 'img/camiseta-riverAlternativa.jpeg',
+    img: 'img/Camiseta-RiverAlternativa.jpeg',
     stock:        { S: false, M: false, L: false, XL: false, XXXL: false },
     stockJugador: { S: false, M: false, L: false, XL: false, XXXL: true  },
     dorsales: []
@@ -267,7 +267,7 @@ const products = [
     img: 'img/short-barcelona.jpeg',
     stock:        { S: false, M: false, L: false, XL: false, XXL: false },
     stockJugador: { S: false, M: false, L: true,  XL: false, XXL: false },
-    dorsales: []
+    dorsales: [{numero: 10, nombre: "lamine yamal"}]
   },
   {
     id: "short-barca-azul",
@@ -540,7 +540,9 @@ function getDorsal(id) {
   return selectedDorsal[id] || null;
 }
 function getDorsalPrice(id) {
-  return selectedDorsal[id] ? DORSAL_EXTRA : 0;
+  if (!selectedDorsal[id]) return 0;
+  var p = products.find(function(x) { return x.id === id; });
+  return (p && p.type === 'short') ? DORSAL_EXTRA_SHORTS : DORSAL_EXTRA;
 }
 function getCurrentFilter() {
   const t = document.querySelector('.filter-tab.active');
@@ -700,7 +702,7 @@ function renderProducts(filter, search, sort) {
     var hasDorsales = p.dorsales && p.dorsales.length > 0;
     var dorsalHtml = '';
     if (hasDorsales) {
-      var dorsalCost = dorsalSeleccionado ? DORSAL_EXTRA : 0;
+      var dPrice = p.type === 'short' ? DORSAL_EXTRA_SHORTS : DORSAL_EXTRA;
       var dorsalLabel = dorsalSeleccionado
         ? '<span class="dorsal-indicator-val">' + dorsalSeleccionado.numero + ' — ' + dorsalSeleccionado.nombre + '</span>'
         : '<span class="dorsal-indicator-none">Sin dorsal</span>';
@@ -710,11 +712,11 @@ function renderProducts(filter, search, sort) {
         + dorsalLabel
         + '<button class="dorsal-edit-btn" data-action="dorsal-open" data-id="' + p.id + '">Elegir</button>'
         + '</div>'
-        + (dorsalSeleccionado ? '<span class="dorsal-price-tag">+' + formatPrice(DORSAL_EXTRA) + '</span>' : '')
+        + (dorsalSeleccionado ? '<span class="dorsal-price-tag">+' + formatPrice(dPrice) + '</span>' : '')
         + '</div>';
     }
 
-    var dorsalCost = hasDorsales && dorsalSeleccionado ? DORSAL_EXTRA : 0;
+    var dorsalCost = hasDorsales && dorsalSeleccionado ? (p.type === 'short' ? DORSAL_EXTRA_SHORTS : DORSAL_EXTRA) : 0;
     var totalPrice = price + dorsalCost;
 
     return '<div class="product-card" id="card-' + p.id + '">'
@@ -829,7 +831,7 @@ function openDorsalModal(productId) {
       + '<span class="dorsal-modal-title" id="dorsalModalTitle">Elegí el dorsal</span>'
       + '<button class="dorsal-modal-close" id="dorsalModalClose">✕</button>'
       + '</div>'
-      + '<div class="dorsal-modal-subtitle">+' + formatPrice(DORSAL_EXTRA) + ' · Opcional</div>'
+      + '<div class="dorsal-modal-subtitle" id="dorsalModalSubtitle"></div>'
       + '<div class="dorsal-modal-list" id="dorsalModalList"></div>'
       + '</div>';
     document.body.appendChild(modal);
@@ -837,8 +839,10 @@ function openDorsalModal(productId) {
     document.getElementById('dorsalModalClose').addEventListener('click', closeDorsalModal);
   }
 
-  // Título
+  // Título y subtítulo con precio correcto según tipo
   document.getElementById('dorsalModalTitle').textContent = p.name;
+  var dPrecioModal = p.type === 'short' ? DORSAL_EXTRA_SHORTS : DORSAL_EXTRA;
+  document.getElementById('dorsalModalSubtitle').textContent = '+' + formatPrice(dPrecioModal) + ' · Opcional';
 
   // Opciones
   var sel = selectedDorsal[productId];
@@ -886,10 +890,11 @@ function selectDorsal(productId, key, numero, nombre) {
       }
     }
     if (key && !priceTag) {
-      var row = indicator.querySelector('.dorsal-indicator-row');
+      var pDorsal = products.find(function(x) { return x.id === productId; });
+      var dPrecio = (pDorsal && pDorsal.type === 'short') ? DORSAL_EXTRA_SHORTS : DORSAL_EXTRA;
       var tag = document.createElement('span');
       tag.className = 'dorsal-price-tag';
-      tag.textContent = '+' + formatPrice(DORSAL_EXTRA);
+      tag.textContent = '+' + formatPrice(dPrecio);
       indicator.appendChild(tag);
     } else if (!key && priceTag) {
       priceTag.remove();
@@ -921,7 +926,7 @@ function addToCart(productId) {
 
   var dorsal     = getDorsal(productId);
   var basePrice  = getPrice(p, version);
-  var dorsalCost = dorsal ? DORSAL_EXTRA : 0;
+  var dorsalCost = dorsal ? getDorsalPrice(productId) : 0;
   var price      = basePrice + dorsalCost;
   var key        = productId + '-' + size + '-' + version + (dorsal ? '-d' + dorsal.numero : '');
   var ex         = cart.find(function(i) { return i.key === key; });

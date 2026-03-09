@@ -1455,9 +1455,84 @@ footer {
   border-color: var(--blue-glow);
 }
 
-/* ══════════════════════════════════════════
-   DORSAL — Modal bottom sheet
-══════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────
+   CSS PARA DORSAL — pegá esto en tu archivo .css
+   ─────────────────────────────────────────────────────────
+
+/* Indicador compacto en la card */
+.dorsal-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 8px 0 4px;
+  padding: 8px 10px;
+  background: #f9fafb;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+}
+
+.dorsal-hidden {
+  display: none !important;
+}
+
+.dorsal-indicator-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+
+.dorsal-indicator-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.dorsal-indicator-val {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #14532d;
+  flex: 1;
+}
+
+.dorsal-indicator-none {
+  font-size: 12px;
+  color: #9ca3af;
+  font-style: italic;
+  flex: 1;
+}
+
+.dorsal-price-tag {
+  font-size: 11px;
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-weight: 600;
+}
+
+.dorsal-edit-btn {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #2563eb;
+  background: none;
+  border: 1.5px solid #93c5fd;
+  border-radius: 6px;
+  padding: 3px 9px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s, color .15s;
+}
+
+.dorsal-edit-btn:hover {
+  background: #eff6ff;
+}
+
+/* Modal dorsal */
 #dorsalModal {
   display: none;
   position: fixed;
@@ -1467,179 +1542,129 @@ footer {
   justify-content: center;
 }
 
-#dorsalModal.open { display: flex; }
+#dorsalModal.open {
+  display: flex;
+}
 
 .dorsal-modal-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,.65);
-  backdrop-filter: blur(6px);
+  background: rgba(0,0,0,.45);
 }
 
 .dorsal-modal-box {
   position: relative;
-  background: var(--navy-mid);
-  border: 1px solid rgba(59,130,246,0.18);
-  border-bottom: none;
-  border-radius: 24px 24px 0 0;
+  background: #fff;
+  border-radius: 20px 20px 0 0;
   width: 100%;
   max-width: 480px;
   max-height: 75vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 -24px 70px rgba(0,0,0,0.7), 0 0 0 1px rgba(59,130,246,0.06);
-  animation: dorsalSlideUp .3s cubic-bezier(0.34,1.4,0.64,1);
-}
-
-/* handle */
-.dorsal-modal-box::before {
-  content: '';
-  display: block;
-  width: 36px;
-  height: 4px;
-  background: rgba(255,255,255,0.12);
-  border-radius: 2px;
-  margin: 12px auto 0;
-  flex-shrink: 0;
+  animation: dorsalSlideUp .25s ease;
 }
 
 @keyframes dorsalSlideUp {
   from { transform: translateY(100%); opacity: 0; }
-  to   { transform: translateY(0); opacity: 1; }
+  to   { transform: translateY(0);    opacity: 1; }
 }
 
 .dorsal-modal-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  padding: 14px 20px 0;
+  padding: 18px 20px 4px;
 }
 
 .dorsal-modal-title {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 700;
-  letter-spacing: 0.03em;
-  color: var(--white);
+  color: #111827;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 80%;
-  line-height: 1.2;
 }
 
 .dorsal-modal-subtitle {
   font-size: 12px;
-  color: var(--white-muted);
-  padding: 4px 20px 14px;
-  border-bottom: 1px solid var(--border);
-  letter-spacing: 0.03em;
+  color: #6b7280;
+  padding: 0 20px 12px;
 }
 
 .dorsal-modal-close {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid var(--border);
+  background: #f3f4f6;
+  border: none;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   font-size: 14px;
   cursor: pointer;
-  color: var(--white-muted);
+  color: #374151;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: background .15s, color .15s, border-color .15s;
-}
-
-.dorsal-modal-close:hover {
-  background: rgba(239,68,68,0.18);
-  color: var(--red);
-  border-color: rgba(239,68,68,0.3);
 }
 
 .dorsal-modal-list {
   overflow-y: auto;
-  padding: 12px 14px 28px;
+  padding: 4px 12px 24px;
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 6px;
 }
-
-.dorsal-modal-list::-webkit-scrollbar { width: 4px; }
-.dorsal-modal-list::-webkit-scrollbar-track { background: transparent; }
-.dorsal-modal-list::-webkit-scrollbar-thumb { background: rgba(59,130,246,0.25); border-radius: 2px; }
 
 .dorsal-modal-item {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   padding: 13px 16px;
-  border: 1px solid var(--border);
+  border: 1.5px solid #e5e7eb;
   border-radius: 12px;
-  background: var(--navy-card);
+  background: #fff;
   cursor: pointer;
   text-align: left;
-  transition: border-color .15s, background .15s, transform .12s;
+  transition: border-color .15s, background .15s;
 }
 
 .dorsal-modal-item:hover {
-  border-color: rgba(59,130,246,0.35);
-  background: rgba(29,78,216,0.1);
-  transform: translateX(3px);
+  border-color: #9ca3af;
+  background: #f9fafb;
 }
 
 .dorsal-modal-item.active {
-  border-color: rgba(34,197,94,0.5);
-  background: rgba(34,197,94,0.07);
+  border-color: #16a34a;
+  background: #f0fdf4;
 }
 
 .dorsal-modal-num {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 22px;
-  letter-spacing: 0.04em;
-  color: var(--white-muted);
-  min-width: 36px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #111827;
+  min-width: 32px;
   text-align: center;
-  line-height: 1;
 }
 
-.dorsal-modal-item.active .dorsal-modal-num { color: var(--green); }
+.dorsal-modal-item.active .dorsal-modal-num {
+  color: #15803d;
+}
 
 .dorsal-modal-name {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--white-muted);
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
   flex: 1;
 }
 
-.dorsal-modal-item.active .dorsal-modal-name { color: var(--white); }
-
 .dorsal-modal-check {
-  width: 22px;
-  height: 22px;
-  background: rgba(34,197,94,0.14);
-  border: 1px solid rgba(34,197,94,0.35);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  color: var(--green);
+  font-size: 16px;
+  color: #16a34a;
   font-weight: 700;
-  flex-shrink: 0;
 }
 
-/* ── Cart item dorsal ── */
 .cart-item-dorsal {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--green);
-  margin-top: 3px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  font-size: 11.5px;
+  color: #15803d;
+  margin-top: 2px;
 }
