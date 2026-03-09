@@ -19,9 +19,8 @@ const products = [
     stockJugador: { S: true,  M: true,  L: true,  XL: true  },
     dorsales: [
       { numero: 10, nombre: 'Messi' },
-      { numero: 11, nombre: 'Di María' },
       { numero: 22, nombre: 'Lautaro' },
-      { numero:  9, nombre: 'Julián' },
+      { numero:  9, nombre: 'J. Alvarez' },
       { numero: 20, nombre: 'Mac Allister' }
     ]
   },
@@ -38,11 +37,23 @@ const products = [
     stock:        { S: false, M: false, L: true,  XL: false },
     stockJugador: { S: false, M: false, L: false, XL: false },
     dorsales: [
-      { numero: 27, nombre: 'Lamine Yamal' },
-      { numero: 10, nombre: 'Deco' },
-      { numero:  9, nombre: 'Lewandowski' },
-      { numero:  8, nombre: 'Pedri' },
-      { numero: 17, nombre: 'Raphinha' }
+      { numero: 10, nombre: 'Lamine Yamal' }
+    ]
+  },
+  {
+    id: "cam-barsaEspecial",
+    name: 'Camiseta barcelona',
+    club: 'barcelona',
+    type: 'camiseta',
+    tags: ['barcelona'],
+    price: 35000,
+    badge: 'new',
+    badgeType: 'new',
+    img: 'img/cam-barsaTitular.jpeg',
+    stock:        { S: false, M: false, L: true,  XL: false },
+    stockJugador: { S: false, M: false, L: false, XL: false },
+    dorsales: [
+      { numero: 10, nombre: 'Lamine Yamal' }
     ]
   },
   {
@@ -57,13 +68,7 @@ const products = [
     img: 'img/cam-realmadrdidAlternativa.jpeg',
     stock:        { S: false, M: false, L: true,  XL: false },
     stockJugador: { S: false, M: false, L: false, XL: false },
-    dorsales: [
-      { numero:  9, nombre: 'Mbappé' },
-      { numero: 10, nombre: 'Modric' },
-      { numero: 20, nombre: 'Vinicius' },
-      { numero: 11, nombre: 'Rodrygo' },
-      { numero:  5, nombre: 'Bellingham' }
-    ]
+    dorsales: [ ]
   },
   {
     id: "cam-atlMadrid",
@@ -77,12 +82,7 @@ const products = [
     img: 'img/cam-atlMadrid.jpeg',
     stock:        { S: false, M: false, L: true,  XL: false },
     stockJugador: { S: false, M: false, L: false, XL: false },
-    dorsales: [
-      { numero:  7, nombre: 'Julián Álvarez' },
-      { numero:  9, nombre: 'Morata' },
-      { numero: 10, nombre: 'Griezmann' },
-      { numero: 14, nombre: 'Marcos Llorente' }
-    ]
+    dorsales: [{numero: 19, nombre: "J. Alvarez"},] 
   },
   {
     id: "cam-chelsea",
@@ -98,10 +98,7 @@ const products = [
     stockJugador: { S: false, M: false, L: false, XL: false },
     dorsales: [
       { numero: 20, nombre: 'Palmer' },
-      { numero:  5, nombre: 'Enzo Fernández' },
-      { numero: 10, nombre: 'Nkunku' },
-      { numero:  9, nombre: 'Jackson' }
-    ]
+      { numero:  5, nombre: 'Enzo' },]
   },
   {
     id: "cam-man-united-blanca",
@@ -129,12 +126,7 @@ const products = [
     img: 'img/camiseta-psg.jpeg',
     stock:        { S: false, M: false, L: true,  XL: false },
     stockJugador: { S: false, M: false, L: false, XL: false },
-    dorsales: [
-      { numero: 10, nombre: 'Neymar' },
-      { numero:  7, nombre: 'Dembélé' },
-      { numero:  9, nombre: 'Ramos' },
-      { numero: 11, nombre: 'Barcola' }
-    ]
+    dorsales: []
   },
   {
     id: "cam-bayern",
@@ -148,12 +140,7 @@ const products = [
     img: 'img/cam.bayern.jpeg',
     stock:        { S: false, M: false, L: false, XL: false },
     stockJugador: { S: false, M: false, L: false, XL: true  },
-    dorsales: [
-      { numero:  9, nombre: 'Kane' },
-      { numero: 10, nombre: 'Musiala' },
-      { numero: 25, nombre: 'Müller' },
-      { numero: 42, nombre: 'Jamal Musiala' }
-    ]
+    dorsales: []
   },
   {
     id: "cam-inter",
@@ -168,11 +155,7 @@ const products = [
     stock:        { S: false, M: true,  L: true,  XL: false },
     stockJugador: { S: false, M: false, L: false, XL: false },
     dorsales: [
-      { numero: 10, nombre: 'Lautaro' },
-      { numero: 23, nombre: 'Barella' },
-      { numero:  9, nombre: 'Thuram' },
-      { numero: 77, nombre: 'Brozovic' }
-    ]
+      { numero: 10, nombre: 'Lautaro' },]
   },
   {
     id: "cam-roma-visitante",
@@ -186,11 +169,7 @@ const products = [
     img: 'img/camiseta-roma.jpeg',
     stock:        { S: false, M: false, L: false, XL: false },
     stockJugador: { S: false, M: false, L: true,  XL: false },
-    dorsales: [
-      { numero: 21, nombre: 'Dybala' },
-      { numero:  9, nombre: 'Abraham' },
-      { numero: 42, nombre: 'Pellegrini' }
-    ]
+    dorsales: []
   },
   {
     id: "cam-river-visitante",
@@ -204,11 +183,7 @@ const products = [
     img: 'img/camiseta-riverAlternativa.jpeg',
     stock:        { S: false, M: false, L: false, XL: false, XXXL: false },
     stockJugador: { S: false, M: false, L: false, XL: false, XXXL: true  },
-    dorsales: [
-      { numero: 10, nombre: 'Gallardo' },
-      { numero:  9, nombre: 'Borré' },
-      { numero: 27, nombre: 'Quintero' }
-    ]
+    dorsales: []
   },
   {
     id: "cam-arg-titular",
