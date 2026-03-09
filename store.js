@@ -1,112 +1,29 @@
-const LOGO = "WhatsApp_Image_2026-02-24_at_19.08.37-removebg-preview.png";
+const LOGO = "img/WhatsApp_Image_2026-02-24_at_19.08.37-removebg-preview.png";
 const WA_NUMBER = '5491156680527';
 const JUGADOR_EXTRA_CAMISETA = 5000;
 const JUGADOR_EXTRA_SHORT    = 7000;
+const DORSAL_EXTRA           = 5000;
 
 const products = [
-  {
-    id: "cam-arg-titular",
-    name: 'Camiseta Argentina Retro Titular',
-    club: 'Argentina',
-    type: 'camiseta',
-    tags: ['argentina', 'retro'],
-    price: 40000,
-    badge: 'Retro',
-    badgeType: 'retro',
-    img: 'camiseta.argentinaretroTitular.jpeg',
-    stock:        { S: true,  M: false, L: false, XL: false },
-    stockJugador: { S: false, M: true,  L: false, XL: false }
-  },
-  {
-    id: "cam-arg-visitante",
-    name: 'Camiseta Argentina Retro Visitante',
-    club: 'Argentina',
-    type: 'camiseta',
-    tags: ['argentina', 'retro'],
-    price: 40000,
-    badge: 'Retro',
-    badgeType: 'retro',
-    img: 'camiseta-argentinaRetro.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false }
-  },
   {
     id: "cam-arg-mundial",
     name: 'Camiseta Argentina Mundial 2026',
     club: 'Argentina',
     type: 'camiseta',
     tags: ['argentina'],
-    price: 40000,
+    price: 35000,
     badge: 'new',
     badgeType: 'new',
-    img: 'cam-argentinaMundial.jpeg',
+    img: 'img/cam-argentinaMundial.jpeg',
     stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: true,  M: true,  L: true,  XL: true  }
-  },
-  {
-    id: "cam-bayern",
-    name: 'Camiseta Bayern Munchen',
-    club: 'Bayern Munchen',
-    type: 'camiseta',
-    tags: ['Bayern Munchen'],
-    price: 40000,
-    badge: 'new',
-    badgeType: 'new',
-    img: 'camiseta-bayern.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: true  }
-  },
-  {
-    id: "cam-man-united-blanca",
-    name: 'Camiseta Manchester united Visitante',
-    club: 'Manchester united',
-    type: 'camiseta',
-    tags: ['Manchester united'],
-    price: 40000,
-    badge: 'new',
-    badgeType: 'new',
-    img: 'camiseta-manUblanca.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false }
-  },
-  {
-    id: "cam-chelsea",
-    name: 'Camiseta chelsea alternativa',
-    club: 'chelsea',
-    type: 'camiseta',
-    tags: ['chelsea'],
-    price: 40000,
-    badge: 'new',
-    badgeType: 'new',
-    img: 'cam-chelseaNegra.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: true,  L: false, XL: true  }
-  },
-  {
-    id: "cam-PSG",
-    name: 'Camiseta PSG',
-    club: 'PARIS SG',
-    type: 'camiseta',
-    tags: ['PSG'],
-    price: 40000,
-    badge: 'new',
-    badgeType: 'new',
-    img: 'camiseta-psg.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false }
-  },
-  {
-    id: "cam-realMadrid-visitante",
-    name: 'Camiseta Real Madrid Visitante',
-    club: 'Real Madrid',
-    type: 'camiseta',
-    tags: ['Real Madrid'],
-    price: 40000,
-    badge: 'new',
-    badgeType: 'new',
-    img: 'camiseta-realMadridAzul.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: true,  L: false, XL: false }
+    stockJugador: { S: true,  M: true,  L: true,  XL: true  },
+    dorsales: [
+      { numero: 10, nombre: 'Messi' },
+      { numero: 11, nombre: 'Di María' },
+      { numero: 22, nombre: 'Lautaro' },
+      { numero:  9, nombre: 'Julián' },
+      { numero: 20, nombre: 'Mac Allister' }
+    ]
   },
   {
     id: "cam-barcelona",
@@ -114,12 +31,39 @@ const products = [
     club: 'barcelona',
     type: 'camiseta',
     tags: ['barcelona'],
-    price: 40000,
+    price: 35000,
     badge: 'new',
     badgeType: 'new',
-    img: 'cam-barsa.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: true,  L: false, XL: false }
+    img: 'img/cam-barsa.jpeg',
+    stock:        { S: false, M: false, L: true,  XL: false },
+    stockJugador: { S: false, M: false, L: false, XL: false },
+    dorsales: [
+      { numero: 27, nombre: 'Lamine Yamal' },
+      { numero: 10, nombre: 'Deco' },
+      { numero:  9, nombre: 'Lewandowski' },
+      { numero:  8, nombre: 'Pedri' },
+      { numero: 17, nombre: 'Raphinha' }
+    ]
+  },
+  {
+    id: "cam-realMadrid-visitante",
+    name: 'Camiseta Real Madrid Visitante',
+    club: 'Real Madrid',
+    type: 'camiseta',
+    tags: ['Real Madrid'],
+    price: 35000,
+    badge: 'new',
+    badgeType: 'new',
+    img: 'img/cam-realmadrdidAlternativa.jpeg',
+    stock:        { S: false, M: false, L: true,  XL: false },
+    stockJugador: { S: false, M: false, L: false, XL: false },
+    dorsales: [
+      { numero:  9, nombre: 'Mbappé' },
+      { numero: 10, nombre: 'Modric' },
+      { numero: 20, nombre: 'Vinicius' },
+      { numero: 11, nombre: 'Rodrygo' },
+      { numero:  5, nombre: 'Bellingham' }
+    ]
   },
   {
     id: "cam-atlMadrid",
@@ -127,38 +71,89 @@ const products = [
     club: 'Atletico Madrid',
     type: 'camiseta',
     tags: ['Atletico Madrid'],
-    price: 40000,
+    price: 35000,
     badge: 'new',
     badgeType: 'new',
-    img: 'cam-atlMadrid.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: true,  XL: false }
+    img: 'img/cam-atlMadrid.jpeg',
+    stock:        { S: false, M: false, L: true,  XL: false },
+    stockJugador: { S: false, M: false, L: false, XL: false },
+    dorsales: [
+      { numero:  7, nombre: 'Julián Álvarez' },
+      { numero:  9, nombre: 'Morata' },
+      { numero: 10, nombre: 'Griezmann' },
+      { numero: 14, nombre: 'Marcos Llorente' }
+    ]
   },
   {
-    id: "cam-river-visitante",
-    name: 'Camiseta river Visitante',
-    club: 'river',
+    id: "cam-chelsea",
+    name: 'Camiseta chelsea alternativa',
+    club: 'chelsea',
     type: 'camiseta',
-    tags: ['river'],
-    price: 40000,
+    tags: ['chelsea'],
+    price: 35000,
     badge: 'new',
     badgeType: 'new',
-    img: 'camiseta-riverAlternativa.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false, XXXL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false, XXXL: true  }
+    img: 'img/cam-chelseaNegra.jpeg',
+    stock:        { S: false, M: true,  L: false, XL: true  },
+    stockJugador: { S: false, M: false, L: false, XL: false },
+    dorsales: [
+      { numero: 20, nombre: 'Palmer' },
+      { numero:  5, nombre: 'Enzo Fernández' },
+      { numero: 10, nombre: 'Nkunku' },
+      { numero:  9, nombre: 'Jackson' }
+    ]
   },
   {
-    id: "cam-roma-visitante",
-    name: 'Camiseta roma Visitante',
-    club: 'roma',
+    id: "cam-man-united-blanca",
+    name: 'Camiseta Manchester united Visitante',
+    club: 'Manchester united',
     type: 'camiseta',
-    tags: ['roma'],
-    price: 40000,
+    tags: ['Manchester united'],
+    price: 35000,
     badge: 'new',
     badgeType: 'new',
-    img: 'camiseta-roma.jpeg',
+    img: 'img/camiseta-manUblanca.jpeg',
     stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: true,  XL: false }
+    stockJugador: { S: false, M: false, L: false, XL: false },
+    dorsales: []
+  },
+  {
+    id: "cam-PSG",
+    name: 'Camiseta PSG',
+    club: 'PARIS SG',
+    type: 'camiseta',
+    tags: ['PSG'],
+    price: 35000,
+    badge: 'new',
+    badgeType: 'new',
+    img: 'img/camiseta-psg.jpeg',
+    stock:        { S: false, M: false, L: true,  XL: false },
+    stockJugador: { S: false, M: false, L: false, XL: false },
+    dorsales: [
+      { numero: 10, nombre: 'Neymar' },
+      { numero:  7, nombre: 'Dembélé' },
+      { numero:  9, nombre: 'Ramos' },
+      { numero: 11, nombre: 'Barcola' }
+    ]
+  },
+  {
+    id: "cam-bayern",
+    name: 'Camiseta Bayern Munchen',
+    club: 'Bayern Munchen',
+    type: 'camiseta',
+    tags: ['Bayern Munchen'],
+    price: 35000,
+    badge: 'new',
+    badgeType: 'new',
+    img: 'img/cam.bayern.jpeg',
+    stock:        { S: false, M: false, L: false, XL: false },
+    stockJugador: { S: false, M: false, L: false, XL: true  },
+    dorsales: [
+      { numero:  9, nombre: 'Kane' },
+      { numero: 10, nombre: 'Musiala' },
+      { numero: 25, nombre: 'Müller' },
+      { numero: 42, nombre: 'Jamal Musiala' }
+    ]
   },
   {
     id: "cam-inter",
@@ -166,12 +161,82 @@ const products = [
     club: 'inter',
     type: 'camiseta',
     tags: ['inter'],
-    price: 40000,
+    price: 35000,
     badge: 'new',
     badgeType: 'new',
-    img: 'cam-inter.jpeg',
+    img: 'img/cam-inter.jpeg',
+    stock:        { S: false, M: true,  L: true,  XL: false },
+    stockJugador: { S: false, M: false, L: false, XL: false },
+    dorsales: [
+      { numero: 10, nombre: 'Lautaro' },
+      { numero: 23, nombre: 'Barella' },
+      { numero:  9, nombre: 'Thuram' },
+      { numero: 77, nombre: 'Brozovic' }
+    ]
+  },
+  {
+    id: "cam-roma-visitante",
+    name: 'Camiseta roma Visitante',
+    club: 'roma',
+    type: 'camiseta',
+    tags: ['roma'],
+    price: 35000,
+    badge: 'new',
+    badgeType: 'new',
+    img: 'img/camiseta-roma.jpeg',
     stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: true,  L: true,  XL: false }
+    stockJugador: { S: false, M: false, L: true,  XL: false },
+    dorsales: [
+      { numero: 21, nombre: 'Dybala' },
+      { numero:  9, nombre: 'Abraham' },
+      { numero: 42, nombre: 'Pellegrini' }
+    ]
+  },
+  {
+    id: "cam-river-visitante",
+    name: 'Camiseta river Visitante',
+    club: 'river',
+    type: 'camiseta',
+    tags: ['river'],
+    price: 35000,
+    badge: 'new',
+    badgeType: 'new',
+    img: 'img/camiseta-riverAlternativa.jpeg',
+    stock:        { S: false, M: false, L: false, XL: false, XXXL: false },
+    stockJugador: { S: false, M: false, L: false, XL: false, XXXL: true  },
+    dorsales: [
+      { numero: 10, nombre: 'Gallardo' },
+      { numero:  9, nombre: 'Borré' },
+      { numero: 27, nombre: 'Quintero' }
+    ]
+  },
+  {
+    id: "cam-arg-titular",
+    name: 'Camiseta Argentina Retro Titular',
+    club: 'Argentina',
+    type: 'camiseta',
+    tags: ['argentina', 'retro'],
+    price: 35000,
+    badge: 'Retro',
+    badgeType: 'retro',
+    img: 'img/camiseta.argentinaretroTitular.jpeg',
+    stock:        { S: false, M: true,  L: false, XL: false },
+    stockJugador: { S: false, M: false, L: false, XL: false },
+    dorsales: []
+  },
+  {
+    id: "cam-arg-visitante",
+    name: 'Camiseta Argentina Retro Visitante',
+    club: 'Argentina',
+    type: 'camiseta',
+    tags: ['argentina', 'retro'],
+    price: 35000,
+    badge: 'Retro',
+    badgeType: 'retro',
+    img: 'img/cam-argentinaRetroAlter.jpeg',
+    stock:        { S: false, M: false, L: false, XL: false },
+    stockJugador: { S: false, M: false, L: false, XL: false },
+    dorsales: []
   },
   {
     id: "cam-total90a",
@@ -179,12 +244,13 @@ const products = [
     club: 'total 90',
     type: 'camiseta',
     tags: ['retro'],
-    price: 40000,
+    price: 35000,
     badge: 'Retro',
     badgeType: 'retro',
-    img: 'camiseta-total90azul.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: true,  M: false, L: true,  XL: true  }
+    img: 'img/camiseta-total90azul.jpeg',
+    stock:        { S: false, M: false, L: false, XL: true  },
+    stockJugador: { S: false, M: false, L: false, XL: false },
+    dorsales: []
   },
   {
     id: "cam-total90n",
@@ -192,12 +258,13 @@ const products = [
     club: 'total 90',
     type: 'camiseta',
     tags: ['retro'],
-    price: 40000,
+    price: 35000,
     badge: 'Retro',
     badgeType: 'retro',
-    img: 'camiseta-total90negra.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: true,  M: false, L: true,  XL: true  }
+    img: 'img/camiseta-total90negra.jpeg',
+    stock:        { S: true,  M: false, L: false, XL: false },
+    stockJugador: { S: false, M: false, L: false, XL: false },
+    dorsales: []
   },
   {
     id: "short-arg-2026",
@@ -205,12 +272,13 @@ const products = [
     club: 'Argentina',
     type: 'short',
     tags: ['argentina'],
-    price: 35000,
+    price: 28000,
     badge: 'New',
     badgeType: 'new',
-    img: 'short-argentina2026.jpeg',
+    img: 'img/short-argentina2026.jpeg',
     stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false }
+    stockJugador: { S: false, M: false, L: false, XL: true  },
+    dorsales: []
   },
   {
     id: "short-barca-negro",
@@ -218,12 +286,13 @@ const products = [
     club: 'FC Barcelona',
     type: 'short',
     tags: [],
-    price: 35000,
+    price: 28000,
     badge: 'new',
     badgeType: 'new',
-    img: 'short-barcelona.jpeg',
+    img: 'img/short-barcelona.jpeg',
     stock:        { S: false, M: false, L: false, XL: false, XXL: false },
-    stockJugador: { S: false, M: true,  L: true,  XL: false, XXL: true  }
+    stockJugador: { S: false, M: false, L: true,  XL: false, XXL: false },
+    dorsales: []
   },
   {
     id: "short-barca-azul",
@@ -231,12 +300,13 @@ const products = [
     club: 'FC Barcelona',
     type: 'short',
     tags: [],
-    price: 35000,
+    price: 28000,
     badge: 'new',
     badgeType: 'new',
-    img: 'short-barcelonaAzul.jpeg',
+    img: 'img/short-barcelonaAzul.jpeg',
     stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: true,  XL: true  }
+    stockJugador: { S: false, M: false, L: false, XL: false },
+    dorsales: []
   },
   {
     id: "short-bayern-crema",
@@ -244,12 +314,13 @@ const products = [
     club: 'Bayern München',
     type: 'short',
     tags: [],
-    price: 35000,
+    price: 28000,
     badge: 'new',
     badgeType: 'new',
-    img: 'short-bayern.jpeg',
+    img: 'img/short-bayern.jpeg',
     stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false }
+    stockJugador: { S: false, M: false, L: false, XL: false },
+    dorsales: []
   },
   {
     id: "short-chelsea-negro-cfc",
@@ -257,12 +328,13 @@ const products = [
     club: 'Chelsea FC',
     type: 'short',
     tags: [],
-    price: 35000,
+    price: 28000,
     badge: 'new',
     badgeType: 'new',
-    img: 'short-chelseaNegro.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: true  }
+    img: 'img/short-chelseaNegro.jpeg',
+    stock:        { S: false, M: false, L: true,  XL: true  },
+    stockJugador: { S: false, M: false, L: false, XL: true,  XXL: true  },
+    dorsales: []
   },
   {
     id: "short-chelsea-verde",
@@ -270,12 +342,13 @@ const products = [
     club: 'Chelsea FC',
     type: 'short',
     tags: [],
-    price: 35000,
+    price: 28000,
     badge: 'New',
     badgeType: 'new',
-    img: 'short-chelseaVerde.jpeg',
+    img: 'img/short-chelseaVerde.jpeg',
     stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false }
+    stockJugador: { S: false, M: false, L: false, XL: false },
+    dorsales: []
   },
   {
     id: "short-chelsea-blanco",
@@ -283,12 +356,13 @@ const products = [
     club: 'Chelsea FC',
     type: 'short',
     tags: [],
-    price: 35000,
+    price: 28000,
     badge: 'new',
     badgeType: 'new',
-    img: 'short-chelseaBlanco.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false }
+    img: 'img/short-chelseaBlanco.jpeg',
+    stock:        { S: false, M: false, L: true,  XL: false },
+    stockJugador: { S: false, M: false, L: false, XL: false },
+    dorsales: []
   },
   {
     id: "short-chelsea-azul-rojo",
@@ -296,116 +370,13 @@ const products = [
     club: 'Chelsea FC',
     type: 'short',
     tags: [],
-    price: 35000,
+    price: 28000,
     badge: 'New',
     badgeType: 'new',
-    img: 'short-chelseaAzul.jpeg',
+    img: 'img/short-chelseaAzul.jpeg',
     stock:        { S: false, M: false, L: false, XL: false, XXL: false },
-    stockJugador: { S: false, M: false, L: false, XL: true,  XXL: true  }
-  },
-  {
-    id: "short-inter-negro-oro",
-    name: 'Short Inter Milán Negro/Oro',
-    club: 'Inter de Milán',
-    type: 'short',
-    tags: [],
-    price: 35000,
-    badge: 'new',
-    badgeType: 'new',
-    img: 'short-inter.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false }
-  },
-  {
-    id: "short-juventus-azul",
-    name: 'Short Juventus Azul Marino',
-    club: 'Juventus FC',
-    type: 'short',
-    tags: [],
-    price: 35000,
-    badge: 'new',
-    badgeType: 'new',
-    img: 'short-juventus.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false, XXL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false, XXL: true  }
-  },
-  {
-    id: "short-Bayern-rojo",
-    name: 'Short Liverpool Rojo',
-    club: 'Liverpool FC',
-    type: 'short',
-    tags: [],
-    price: 35000,
-    badge: 'new',
-    badgeType: 'new',
-    img: 'short-bayern.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false }
-  },
-  {
-    id: "short-manu-negro-amarillo",
-    name: 'Short Manchester United Negro/Amarillo',
-    club: 'Manchester United',
-    type: 'short',
-    tags: [],
-    price: 35000,
-    badge: 'new',
-    badgeType: 'new',
-    img: 'short-manU.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false, XXL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false, XXL: false }
-  },
-  {
-    id: "short-manu-azul",
-    name: 'Short Manchester United Azul',
-    club: 'Manchester United',
-    type: 'short',
-    tags: [],
-    price: 35000,
-    badge: 'New',
-    badgeType: 'new',
-    img: 'short-manUazul.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false, XXL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false, XXL: true  }
-  },
-  {
-    id: "short-psg-azul",
-    name: 'Short PSG Azul Marino',
-    club: 'Paris Saint-Germain',
-    type: 'short',
-    tags: [],
-    price: 35000,
-    badge: 'new',
-    badgeType: 'new',
-    img: 'short-psg.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false }
-  },
-  {
-    id: "short-psg-negro-rosa",
-    name: 'Short PSG Negro/Rosa',
-    club: 'Paris Saint-Germain',
-    type: 'short',
-    tags: [],
-    price: 35000,
-    badge: 'new',
-    badgeType: 'new',
-    img: 'short-psg-negro.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false }
-  },
-  {
-    id: "short-roma-granate",
-    name: 'Short AS Roma Granate',
-    club: 'AS Roma',
-    type: 'short',
-    tags: [],
-    price: 35000,
-    badge: 'new',
-    badgeType: 'new',
-    img: 'short-roma.jpeg',
-    stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false }
+    stockJugador: { S: false, M: false, L: false, XL: true,  XXL: true  },
+    dorsales: []
   },
   {
     id: "short-chelsea-negro-amarillo",
@@ -413,12 +384,111 @@ const products = [
     club: 'Chelsea FC',
     type: 'short',
     tags: [],
-    price: 35000,
+    price: 28000,
     badge: 'new',
     badgeType: 'new',
-    img: 'short-chelsea-negroAmarillo.jpeg',
+    img: 'img/short-chelsea-negroAmarillo.jpeg',
     stock:        { S: false, M: false, L: false, XL: false, XXL: false },
-    stockJugador: { S: false, M: false, L: false, XL: true,  XXL: true  }
+    stockJugador: { S: false, M: false, L: false, XL: true,  XXL: true  },
+    dorsales: []
+  },
+  {
+    id: "short-inter-negro-oro",
+    name: 'Short Inter Milán Negro/Oro',
+    club: 'Inter de Milán',
+    type: 'short',
+    tags: [],
+    price: 28000,
+    badge: 'new',
+    badgeType: 'new',
+    img: 'img/short-inter.jpeg',
+    stock:        { S: false, M: false, L: false, XL: false },
+    stockJugador: { S: false, M: false, L: true,  XL: false },
+    dorsales: []
+  },
+  {
+    id: "short-juventus-azul",
+    name: 'Short Juventus Azul Marino',
+    club: 'Juventus FC',
+    type: 'short',
+    tags: [],
+    price: 28000,
+    badge: 'new',
+    badgeType: 'new',
+    img: 'img/short-juventus.jpeg',
+    stock:        { S: false, M: false, L: false, XL: false, XXL: false },
+    stockJugador: { S: false, M: false, L: false, XL: false, XXL: true  },
+    dorsales: []
+  },
+  {
+    id: "short-manu-negro-amarillo",
+    name: 'Short Manchester United Negro/Amarillo',
+    club: 'Manchester United',
+    type: 'short',
+    tags: [],
+    price: 28000,
+    badge: 'new',
+    badgeType: 'new',
+    img: 'img/short-manU.jpeg',
+    stock:        { S: false, M: false, L: false, XL: false, XXL: false },
+    stockJugador: { S: false, M: false, L: false, XL: false, XXL: false },
+    dorsales: []
+  },
+  {
+    id: "short-manu-azul",
+    name: 'Short Manchester United Azul',
+    club: 'Manchester United',
+    type: 'short',
+    tags: [],
+    price: 28000,
+    badge: 'New',
+    badgeType: 'new',
+    img: 'img/short-manUazul.jpeg',
+    stock:        { S: false, M: false, L: false, XL: false, XXL: false },
+    stockJugador: { S: false, M: false, L: false, XL: false, XXL: false },
+    dorsales: []
+  },
+  {
+    id: "short-psg-azul",
+    name: 'Short PSG Azul Marino',
+    club: 'Paris Saint-Germain',
+    type: 'short',
+    tags: [],
+    price: 28000,
+    badge: 'new',
+    badgeType: 'new',
+    img: 'img/short-psg.jpeg',
+    stock:        { S: false, M: false, L: false, XL: false },
+    stockJugador: { S: false, M: false, L: false, XL: false },
+    dorsales: []
+  },
+  {
+    id: "short-psg-negro-rosa",
+    name: 'Short PSG Negro/Rosa',
+    club: 'Paris Saint-Germain',
+    type: 'short',
+    tags: [],
+    price: 28000,
+    badge: 'new',
+    badgeType: 'new',
+    img: 'img/short-psg-negro.jpeg',
+    stock:        { S: false, M: false, L: false, XL: false },
+    stockJugador: { S: false, M: false, L: false, XL: true  },
+    dorsales: []
+  },
+  {
+    id: "short-roma-granate",
+    name: 'Short AS Roma Granate',
+    club: 'AS Roma',
+    type: 'short',
+    tags: [],
+    price: 28000,
+    badge: 'new',
+    badgeType: 'new',
+    img: 'img/short-roma.jpeg',
+    stock:        { S: false, M: false, L: false, XL: false },
+    stockJugador: { S: false, M: false, L: false, XL: true  },
+    dorsales: []
   },
   {
     id: "short-atleti",
@@ -426,12 +496,13 @@ const products = [
     club: 'Atlético de Madrid',
     type: 'short',
     tags: [],
-    price: 35000,
+    price: 28000,
     badge: 'New',
     badgeType: 'new',
-    img: 'short-atlMadrid.jpeg',
+    img: 'img/short-atlMadrid.jpeg',
     stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false }
+    stockJugador: { S: false, M: false, L: false, XL: false },
+    dorsales: []
   },
   {
     id: "short-astonVilla",
@@ -439,12 +510,13 @@ const products = [
     club: 'Aston Villa',
     type: 'short',
     tags: ["Aston Villa"],
-    price: 35000,
+    price: 28000,
     badge: 'New',
     badgeType: 'new',
-    img: 'short-aston.jpeg',
+    img: 'img/short-aston.jpeg',
     stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false }
+    stockJugador: { S: false, M: false, L: false, XL: false },
+    dorsales: []
   },
   {
     id: "short-saoPaulo",
@@ -452,18 +524,20 @@ const products = [
     club: 'sao paulo',
     type: 'short',
     tags: ["sao paulo"],
-    price: 35000,
+    price: 28000,
     badge: 'New',
     badgeType: 'new',
-    img: 'short-saoPaulo.jpeg',
+    img: 'img/short-saoPaulo.jpeg',
     stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false }
+    stockJugador: { S: false, M: false, L: false, XL: false },
+    dorsales: []
   }
 ];
 
 // ── Estado ───────────────────────────────────────────────
 const selectedSizes    = {};
 const selectedVersions = {};
+const selectedDorsal   = {}; // { productId: { key, numero, nombre } | null }
 let cart = [];
 let currentFilter = 'all';
 let currentSort   = 'default';
@@ -486,6 +560,12 @@ function getJugadorExtra(p) {
 }
 function getStock(p, ver) {
   return ver === 'jugador' ? (p.stockJugador || {}) : (p.stock || {});
+}
+function getDorsal(id) {
+  return selectedDorsal[id] || null;
+}
+function getDorsalPrice(id) {
+  return selectedDorsal[id] ? DORSAL_EXTRA : 0;
 }
 function getCurrentFilter() {
   const t = document.querySelector('.filter-tab.active');
@@ -542,6 +622,9 @@ function buildCartWhatsAppMsg() {
     var ver = i.version === 'jugador' ? 'Versión Jugador' : 'Versión Fan';
     msg += (idx + 1) + '. *' + i.name + '*\n';
     msg += '   • ' + ver + ' · Talle ' + i.size + ' · Cant. ' + i.qty + '\n';
+    if (i.dorsal) {
+      msg += '   • 🎽 Dorsal: Nº ' + i.dorsal.numero + ' — ' + i.dorsal.nombre + '\n';
+    }
     msg += '   • Subtotal: ' + formatPrice(i.price * i.qty) + '\n\n';
   });
   msg += '─────────────────────\n';
@@ -637,6 +720,28 @@ function renderProducts(filter, search, sort) {
       + ' Jugador</button>'
       + '</div>';
 
+    // ── Dorsal: indicador compacto en la card ──
+    var dorsalSeleccionado = selectedDorsal[p.id] || null;
+    var hasDorsales = p.dorsales && p.dorsales.length > 0;
+    var dorsalHtml = '';
+    if (hasDorsales) {
+      var dorsalCost = dorsalSeleccionado ? DORSAL_EXTRA : 0;
+      var dorsalLabel = dorsalSeleccionado
+        ? '<span class="dorsal-indicator-val">' + dorsalSeleccionado.numero + ' — ' + dorsalSeleccionado.nombre + '</span>'
+        : '<span class="dorsal-indicator-none">Sin dorsal</span>';
+      dorsalHtml = '<div class="dorsal-indicator' + (sel ? '' : ' dorsal-hidden') + '" id="dorsal-section-' + p.id + '">'
+        + '<div class="dorsal-indicator-row">'
+        + '<span class="dorsal-indicator-label">🎽 Dorsal</span>'
+        + dorsalLabel
+        + '<button class="dorsal-edit-btn" data-action="dorsal-open" data-id="' + p.id + '">Elegir</button>'
+        + '</div>'
+        + (dorsalSeleccionado ? '<span class="dorsal-price-tag">+' + formatPrice(DORSAL_EXTRA) + '</span>' : '')
+        + '</div>';
+    }
+
+    var dorsalCost = hasDorsales && dorsalSeleccionado ? DORSAL_EXTRA : 0;
+    var totalPrice = price + dorsalCost;
+
     return '<div class="product-card" id="card-' + p.id + '">'
       + '<div class="product-img-wrap" data-action="zoom" data-img="' + p.img + '" data-name="' + p.name.replace(/"/g, '&quot;') + '" title="Ver imagen ampliada">'
       + '<img src="' + p.img + '" alt="' + p.name + '" loading="lazy" onerror="this.style.display=\'none\'">'
@@ -648,9 +753,10 @@ function renderProducts(filter, search, sort) {
       + '<div class="product-name">' + p.name + '</div>'
       + versionToggleHtml
       + infoTagHtml
-      + '<div class="product-price">' + formatPrice(price) + ' <small>ARS</small></div>'
+      + '<div class="product-price" id="price-' + p.id + '">' + formatPrice(totalPrice) + ' <small>ARS</small></div>'
       + '<div class="size-label">Talle:</div>'
       + '<div class="size-grid">' + sizeBtns + '</div>'
+      + dorsalHtml
       + '<button class="add-btn" data-action="add" data-id="' + p.id + '"' + (!canAdd ? ' disabled' : '') + '>'
       + mkCartIcon() + ' ' + (canAdd ? 'Agregar al Carrito' : 'Seleccioná un talle')
       + '</button>'
@@ -702,11 +808,15 @@ function setVersion(productId, version) {
   var addBtn = card.querySelector('[data-action="add"]');
   addBtn.disabled = !canAdd;
   addBtn.innerHTML = mkCartIcon() + ' ' + (canAdd ? 'Agregar al Carrito' : 'Seleccioná un talle');
+  // Mostrar/ocultar dorsal según si hay talle seleccionado
+  var dorsalSection = document.getElementById('dorsal-section-' + productId);
+  if (dorsalSection) dorsalSection.classList.toggle('dorsal-hidden', !selNow);
 }
 
 // ── Seleccionar talle ────────────────────────────────────
 function selectSize(productId, size) {
-  var p     = products.find(function(x) { return x.id === productId; });
+  var p = products.find(function(x) { return x.id === productId; });
+  if (!p) return;
   var ver   = getVersion(productId);
   var stock = getStock(p, ver);
   if (stock[size] !== true) return;
@@ -719,25 +829,144 @@ function selectSize(productId, size) {
   var addBtn = card.querySelector('[data-action="add"]');
   addBtn.disabled = false;
   addBtn.innerHTML = mkCartIcon() + ' Agregar al Carrito';
+  // Mostrar indicador dorsal
+  var dorsalSection = document.getElementById('dorsal-section-' + productId);
+  if (dorsalSection) dorsalSection.classList.remove('dorsal-hidden');
+  // Abrir modal dorsal si tiene opciones
+  if (p.dorsales && p.dorsales.length > 0) {
+    openDorsalModal(productId);
+  }
 }
 
-// ── Carrito ──────────────────────────────────────────────
+// ── Dorsal Modal ─────────────────────────────────────────
+function openDorsalModal(productId) {
+  var p = products.find(function(x) { return x.id === productId; });
+  if (!p || !p.dorsales || !p.dorsales.length) return;
+
+  var modal = document.getElementById('dorsalModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'dorsalModal';
+    modal.innerHTML =
+      '<div class="dorsal-modal-backdrop" id="dorsalModalBackdrop"></div>'
+      + '<div class="dorsal-modal-box">'
+      + '<div class="dorsal-modal-header">'
+      + '<span class="dorsal-modal-title" id="dorsalModalTitle">Elegí el dorsal</span>'
+      + '<button class="dorsal-modal-close" id="dorsalModalClose">✕</button>'
+      + '</div>'
+      + '<div class="dorsal-modal-subtitle">+' + formatPrice(DORSAL_EXTRA) + ' · Opcional</div>'
+      + '<div class="dorsal-modal-list" id="dorsalModalList"></div>'
+      + '</div>';
+    document.body.appendChild(modal);
+    document.getElementById('dorsalModalBackdrop').addEventListener('click', closeDorsalModal);
+    document.getElementById('dorsalModalClose').addEventListener('click', closeDorsalModal);
+  }
+
+  // Título
+  document.getElementById('dorsalModalTitle').textContent = p.name;
+
+  // Opciones
+  var sel = selectedDorsal[productId];
+  var listHtml = '<button class="dorsal-modal-item' + (!sel ? ' active' : '') + '" data-pid="' + productId + '" data-dkey="">'
+    + '<span class="dorsal-modal-num">—</span>'
+    + '<span class="dorsal-modal-name">Sin dorsal</span>'
+    + (!sel ? '<span class="dorsal-modal-check">✓</span>' : '')
+    + '</button>';
+  listHtml += p.dorsales.map(function(d) {
+    var key = d.numero + '|' + d.nombre;
+    var isActive = sel && sel.key === key;
+    return '<button class="dorsal-modal-item' + (isActive ? ' active' : '') + '" data-pid="' + productId + '" data-dkey="' + key + '" data-dnum="' + d.numero + '" data-dnom="' + d.nombre.replace(/"/g,'&quot;') + '">'
+      + '<span class="dorsal-modal-num">' + d.numero + '</span>'
+      + '<span class="dorsal-modal-name">' + d.nombre + '</span>'
+      + (isActive ? '<span class="dorsal-modal-check">✓</span>' : '')
+      + '</button>';
+  }).join('');
+
+  document.getElementById('dorsalModalList').innerHTML = listHtml;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDorsalModal() {
+  var modal = document.getElementById('dorsalModal');
+  if (modal) modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function selectDorsal(productId, key, numero, nombre) {
+  selectedDorsal[productId] = key ? { key: key, numero: numero, nombre: nombre } : null;
+
+  // Actualizar indicador en la card
+  var indicator = document.getElementById('dorsal-section-' + productId);
+  if (indicator) {
+    var valEl = indicator.querySelector('.dorsal-indicator-val, .dorsal-indicator-none');
+    var priceTag = indicator.querySelector('.dorsal-price-tag');
+    if (valEl) {
+      if (key) {
+        valEl.className = 'dorsal-indicator-val';
+        valEl.textContent = numero + ' — ' + nombre;
+      } else {
+        valEl.className = 'dorsal-indicator-none';
+        valEl.textContent = 'Sin dorsal';
+      }
+    }
+    if (key && !priceTag) {
+      var row = indicator.querySelector('.dorsal-indicator-row');
+      var tag = document.createElement('span');
+      tag.className = 'dorsal-price-tag';
+      tag.textContent = '+' + formatPrice(DORSAL_EXTRA);
+      indicator.appendChild(tag);
+    } else if (!key && priceTag) {
+      priceTag.remove();
+    }
+  }
+
+  updateDorsalPrice(productId);
+  closeDorsalModal();
+}
+
+function updateDorsalPrice(productId) {
+  var p = products.find(function(x) { return x.id === productId; });
+  if (!p) return;
+  var ver   = p.tags.indexOf('retro') >= 0 ? 'fan' : getVersion(productId);
+  var base  = p.tags.indexOf('retro') >= 0 ? p.price : getPrice(p, ver);
+  var extra = getDorsalPrice(productId);
+  var priceEl = document.getElementById('price-' + productId);
+  if (priceEl) priceEl.innerHTML = formatPrice(base + extra) + ' <small>ARS</small>';
+}
+
+
 function addToCart(productId) {
   var p       = products.find(function(x) { return x.id === productId; });
   var size    = selectedSizes[productId];
   var version = getVersion(productId);
   var stock   = getStock(p, version);
-  if (!size)              { showToast('Seleccioná un talle primero', 'error'); return; }
+  if (!size)                { showToast('Seleccioná un talle primero', 'error'); return; }
   if (stock[size] !== true) { showToast('Talle agotado', 'error'); return; }
-  var price = getPrice(p, version);
-  var key   = productId + '-' + size + '-' + version;
-  var ex    = cart.find(function(i) { return i.key === key; });
+
+  var dorsal     = getDorsal(productId);
+  var basePrice  = getPrice(p, version);
+  var dorsalCost = dorsal ? DORSAL_EXTRA : 0;
+  var price      = basePrice + dorsalCost;
+  var key        = productId + '-' + size + '-' + version + (dorsal ? '-d' + dorsal.numero : '');
+  var ex         = cart.find(function(i) { return i.key === key; });
   if (ex) { ex.qty++; } else {
-    cart.push({ key: key, productId: productId, size: size, qty: 1, version: version, name: p.name, price: price, img: p.img });
+    cart.push({
+      key: key, productId: productId, size: size, qty: 1,
+      version: version, name: p.name, price: price, img: p.img,
+      dorsal: dorsal ? { nombre: dorsal.nombre, numero: dorsal.numero } : null
+    });
   }
   updateCartUI();
   wiggleCart();
-  showToast('✓ ' + p.name + ' (' + size + ' · ' + (version === 'jugador' ? 'Jugador' : 'Fan') + ') agregado', 'success');
+  var dorsalInfo = dorsal ? ' · #' + dorsal.numero + ' ' + dorsal.nombre : '';
+  showToast({
+    name:    p.name,
+    size:    size,
+    version: version === 'jugador' ? 'Jugador' : 'Fan',
+    dorsal:  dorsalInfo,
+    price:   formatPrice(price)
+  }, 'success');
 }
 
 function removeFromCart(key) {
@@ -776,6 +1005,7 @@ function updateCartUI() {
       + '<div class="cart-item-info">'
       + '<div class="cart-item-name">' + item.name + '</div>'
       + '<div class="cart-item-size">Talle: ' + item.size + ' · <span class="cart-version-tag">' + vl + '</span></div>'
+      + (item.dorsal ? '<div class="cart-item-dorsal">🎽 Dorsal: <strong>' + item.dorsal.numero + ' — ' + item.dorsal.nombre + '</strong></div>' : '')
       + '<div class="cart-item-controls">'
       + '<button class="qty-btn" data-cart-action="dec" data-key="' + item.key + '">−</button>'
       + '<span class="qty-num">' + item.qty + '</span>'
@@ -856,38 +1086,47 @@ document.addEventListener('click', function(e) {
 function filterProducts(filter, btn) { selectFilter(filter, document.querySelector('.filter-option[data-filter="' + filter + '"]')); }
 function filterFromNav(filter)        { selectFilter(filter, document.querySelector('.filter-option[data-filter="' + filter + '"]')); }
 
-function showToast(msg, type) {
+function showToast(data, type) {
   var c = document.getElementById('toastContainer');
   var t = document.createElement('div');
   t.className = 'toast ' + (type || '');
 
+  var checkIcon = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  var alertIcon = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+  var arrowIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>';
+
   if (type === 'success') {
+    var d = data;
+    var sub = '<strong>' + d.size + '</strong> · ' + d.version + (d.dorsal ? ' · <strong>' + d.dorsal + '</strong>' : '') + ' · ' + d.price;
     t.innerHTML =
-      '<div class="toast-icon">'
-      + '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
-      + '</div>'
+      '<div class="toast-inner">'
+      + '<div class="toast-icon">' + checkIcon + '</div>'
       + '<div class="toast-body">'
-      + '<div class="toast-title">¡Agregado al carrito!</div>'
-      + '<div class="toast-msg">' + msg.replace('✓ ', '') + '</div>'
+      + '<div class="toast-title">' + d.name + '</div>'
+      + '<div class="toast-msg">' + sub + '</div>'
       + '</div>'
-      + '<div class="toast-arrow">↑ mirá arriba</div>';
+      + '<div class="toast-arrow">' + arrowIcon + '<span class="toast-arrow-label">Carrito</span></div>'
+      + '</div>';
   } else if (type === 'error') {
+    var msg = typeof data === 'string' ? data : (data.msg || '');
     t.innerHTML =
-      '<div class="toast-icon toast-icon-error">'
-      + '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
-      + '</div>'
+      '<div class="toast-inner">'
+      + '<div class="toast-icon">' + alertIcon + '</div>'
       + '<div class="toast-body">'
+      + '<div class="toast-title">Atención</div>'
       + '<div class="toast-msg">' + msg + '</div>'
+      + '</div>'
       + '</div>';
   } else {
-    t.textContent = msg;
+    var msg2 = typeof data === 'string' ? data : '';
+    t.innerHTML = '<div class="toast-inner"><div class="toast-body"><div class="toast-msg">' + msg2 + '</div></div></div>';
   }
 
   c.appendChild(t);
   setTimeout(function() {
     t.classList.add('toast-hiding');
     setTimeout(function() { t.remove(); }, 350);
-  }, 3200);
+  }, 3500);
 }
 
 function wiggleCart() {
@@ -919,10 +1158,23 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!el) return;
     var action = el.dataset.action;
     var id     = el.dataset.id;
+    if (action === 'zoom')        { openImageModal(el.dataset.img, el.dataset.name); return; }
+    if (action === 'dorsal-open') { openDorsalModal(id); return; }
+    if (!id) return;
     if (action === 'version') setVersion(id, el.dataset.ver);
     if (action === 'size')    selectSize(id, el.dataset.sz);
     if (action === 'add')     addToCart(id);
-    if (action === 'zoom')    openImageModal(el.dataset.img, el.dataset.name);
+  });
+
+  // Listener del modal dorsal (delegado en body)
+  document.body.addEventListener('click', function(e) {
+    var el = e.target.closest('.dorsal-modal-item');
+    if (!el) return;
+    var pid  = el.dataset.pid;
+    var key  = el.dataset.dkey;
+    var num  = el.dataset.dnum;
+    var nom  = el.dataset.dnom;
+    selectDorsal(pid, key, num, nom);
   });
 
   // Un solo listener para el carrito
@@ -940,3 +1192,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (cart.length) openWhatsApp(buildCartWhatsAppMsg());
   });
 });
+
+
+
+
+
+
+
+
+
+
+ 
