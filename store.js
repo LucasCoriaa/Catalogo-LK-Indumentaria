@@ -50,8 +50,8 @@ const products = [
     badge: 'new',
     badgeType: 'new',
     img: 'img/cam-barsaTitular.jpeg',
-    stock:        { S: false, M: false, L: true,  XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false },
+    stock:        { S: false, M: false, L: false,  XL: false },
+    stockJugador: { S: false, M: false, L: true, XL: false },
     dorsales: [
       { numero: 10, nombre: 'Lamine Yamal' }
     ]
@@ -124,8 +124,8 @@ const products = [
     badge: 'new',
     badgeType: 'new',
     img: 'img/camiseta-psg.jpeg',
-    stock:        { S: false, M: false, L: true,  XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false },
+    stock:        { S: false, M: false, L: false,  XL: false },
+    stockJugador: { S: false, M: false, L: true, XL: false },
     dorsales: []
   },
   {
@@ -182,7 +182,7 @@ const products = [
     badgeType: 'new',
     img: 'img/Camiseta-RiverAlternativa.jpeg',
     stock:        { S: false, M: false, L: false, XL: false, XXXL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false, XXXL: true  },
+    stockJugador: { S: false, M: false, L: false, XL: false, XXL: true  },
     dorsales: []
   },
   {
@@ -335,8 +335,8 @@ const products = [
     badge: 'new',
     badgeType: 'new',
     img: 'img/short-chelseaBlanco.jpeg',
-    stock:        { S: false, M: false, L: true,  XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false },
+    stock:        { S: false, M: false, L: false,  XL: false },
+    stockJugador: { S: false, M: false, L: true, XL: false },
     dorsales: []
   },
   {
@@ -476,7 +476,7 @@ const products = [
     badgeType: 'new',
     img: 'img/short-atlMadrid.jpeg',
     stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false },
+    stockJugador: { S: false, M: false, L: true, XL: false },
     dorsales: []
   },
   {
@@ -490,7 +490,7 @@ const products = [
     badgeType: 'new',
     img: 'img/short-aston.jpeg',
     stock:        { S: false, M: false, L: false, XL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false },
+    stockJugador: { S: false, M: false, L: true, XL: false },
     dorsales: []
   },
   {
