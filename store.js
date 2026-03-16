@@ -182,7 +182,7 @@ const products = [
     badgeType: 'new',
     img: 'img/Camiseta-RiverAlternativa.jpeg',
     stock:        { S: false, M: false, L: false, XL: false, XXXL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false, XXL: true  },
+    stockJugador: { S: false, M: false, L: false, XL: false, XXL: false  },
     dorsales: []
   },
   {
@@ -544,12 +544,22 @@ function getDorsalPrice(id) {
   var p = products.find(function(x) { return x.id === id; });
   return (p && p.type === 'short') ? DORSAL_EXTRA_SHORTS : DORSAL_EXTRA;
 }
-function getCurrentFilter() {
-  const t = document.querySelector('.filter-tab.active');
-  if (!t) return 'all';
-  const m = t.getAttribute('onclick').match(/'([^']+)'/);
-  return m ? m[1] : 'all';
+
+// ── Chequea si una versión tiene al menos un talle disponible ──
+function hasAnyStock(p, ver) {
+  var stock = getStock(p, ver);
+  return Object.keys(stock).some(function(k) { return stock[k] === true; });
 }
+
+// ── Versión inicial: fan si tiene stock, si no jugador, si no ninguna ──
+function resolveInitialVersion(p) {
+  if (p.tags.indexOf('retro') >= 0) return 'fan';
+  if (selectedVersions[p.id]) return selectedVersions[p.id];
+  if (hasAnyStock(p, 'fan')) return 'fan';
+  if (hasAnyStock(p, 'jugador')) return 'jugador';
+  return 'fan'; // sin stock en ninguna
+}
+
 function mkCartIcon() {
   return '<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>';
 }
@@ -637,13 +647,13 @@ function renderProducts(filter, search, sort) {
   }
 
   // 3. Ordenamiento
-  filtered = filtered.slice(); // copia para no mutar
+  filtered = filtered.slice();
   if (currentSort === 'price-asc')  filtered.sort(function(a,b) { return a.price - b.price; });
   if (currentSort === 'price-desc') filtered.sort(function(a,b) { return b.price - a.price; });
   if (currentSort === 'name-asc')   filtered.sort(function(a,b) { return a.name.localeCompare(b.name, 'es'); });
   if (currentSort === 'name-desc')  filtered.sort(function(a,b) { return b.name.localeCompare(a.name, 'es'); });
 
-  // Sin resultados
+  // Sin resultados de búsqueda
   if (!filtered.length) {
     catalog.innerHTML = '<div class="no-results">'
       + '<div class="no-results-icon">🔍</div>'
@@ -654,54 +664,70 @@ function renderProducts(filter, search, sort) {
   }
 
   catalog.innerHTML = filtered.map(function(p) {
-    var ver    = getVersion(p.id);
     var isRetro = p.tags.indexOf('retro') >= 0;
-    // Retro: siempre fan, precio base, sin toggle de versión
-    var ver    = isRetro ? 'fan' : getVersion(p.id);
+
+    // Determinar versión activa
+    var ver = isRetro ? 'fan' : resolveInitialVersion(p);
+    // Guardar en estado si aún no tiene versión asignada
+    if (!isRetro && !selectedVersions[p.id]) {
+      selectedVersions[p.id] = ver;
+    }
+
     var stock  = getStock(p, ver);
     var sel    = selectedSizes[p.id] || null;
     var price  = isRetro ? p.price : getPrice(p, ver);
     var isFan  = ver === 'fan';
 
-    // Talles: retro solo usa stock fan; otros usan unión de ambas versiones
-    var sizesSet = {};
-    if (isRetro) {
-      Object.keys(p.stock).forEach(function(k) { sizesSet[k] = true; });
-    } else {
-      Object.keys(p.stock).forEach(function(k) { sizesSet[k] = true; });
-      Object.keys(p.stockJugador || {}).forEach(function(k) { sizesSet[k] = true; });
-    }
-    var allSizes = Object.keys(sizesSet);
+    // ── Stock checks para el toggle ──
+    var fanHasStock     = !isRetro && hasAnyStock(p, 'fan');
+    var jugadorHasStock = !isRetro && hasAnyStock(p, 'jugador');
+    var noStockAtAll    = !hasAnyStock(p, 'fan') && !hasAnyStock(p, 'jugador');
+
+    // ── Talles: solo los de la versión activa ──
+    var allSizes = Object.keys(stock);
 
     var canAdd = sel && (stock[sel] === true);
 
-    var sizeBtns = allSizes.map(function(sz) {
-      var avail = stock[sz] === true;
-      return '<button'
-        + ' class="size-btn' + (avail ? '' : ' out-of-stock') + (sel === sz ? ' selected' : '') + '"'
-        + ' data-action="size" data-id="' + p.id + '" data-sz="' + sz + '"'
-        + (avail ? '' : ' disabled')
-        + ' title="' + (avail ? sz : sz + ' — Agotado') + '"'
-        + '>' + sz + '</button>';
-    }).join('');
+    // ── Botones de talle o mensaje sin stock ──
+    var sizeBtns;
+    if (noStockAtAll) {
+      sizeBtns = ''; // se muestra el cartel abajo
+    } else {
+      sizeBtns = allSizes.map(function(sz) {
+        var avail = stock[sz] === true;
+        return '<button'
+          + ' class="size-btn' + (avail ? '' : ' out-of-stock') + (sel === sz ? ' selected' : '') + '"'
+          + ' data-action="size" data-id="' + p.id + '" data-sz="' + sz + '"'
+          + (avail ? '' : ' disabled')
+          + ' title="' + (avail ? sz : sz + ' — Agotado') + '"'
+          + '>' + sz + '</button>';
+      }).join('');
+    }
 
     var badgeHtml = p.badge ? '<div class="product-badge ' + (p.badgeType || '') + '">' + p.badge + '</div>' : '';
-    var infoTagHtml = '';
-    var versionToggleHtml = isRetro ? '' :
-        '<div class="version-toggle">'
-      + '<button class="ver-btn' + (isFan ? ' active' : '') + '" data-action="version" data-id="' + p.id + '" data-ver="fan">'
-      + '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'
-      + ' Fan</button>'
-      + '<button class="ver-btn jugador' + (!isFan ? ' active' : '') + '" data-action="version" data-id="' + p.id + '" data-ver="jugador">'
-      + '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>'
-      + ' Jugador</button>'
-      + '</div>';
 
-    // ── Dorsal: indicador compacto en la card ──
+    // ── Toggle de versión: solo mostrar botones con stock ──
+    var versionToggleHtml = '';
+    if (!isRetro && (fanHasStock || jugadorHasStock)) {
+      versionToggleHtml = '<div class="version-toggle">';
+      if (fanHasStock) {
+        versionToggleHtml += '<button class="ver-btn' + (isFan ? ' active' : '') + '" data-action="version" data-id="' + p.id + '" data-ver="fan">'
+          + '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'
+          + ' Fan</button>';
+      }
+      if (jugadorHasStock) {
+        versionToggleHtml += '<button class="ver-btn jugador' + (!isFan ? ' active' : '') + '" data-action="version" data-id="' + p.id + '" data-ver="jugador">'
+          + '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>'
+          + ' Jugador</button>';
+      }
+      versionToggleHtml += '</div>';
+    }
+
+    // ── Dorsal ──
     var dorsalSeleccionado = selectedDorsal[p.id] || null;
     var hasDorsales = p.dorsales && p.dorsales.length > 0;
     var dorsalHtml = '';
-    if (hasDorsales) {
+    if (hasDorsales && !noStockAtAll) {
       var dPrice = p.type === 'short' ? DORSAL_EXTRA_SHORTS : DORSAL_EXTRA;
       var dorsalLabel = dorsalSeleccionado
         ? '<span class="dorsal-indicator-val">' + dorsalSeleccionado.numero + ' — ' + dorsalSeleccionado.nombre + '</span>'
@@ -719,7 +745,12 @@ function renderProducts(filter, search, sort) {
     var dorsalCost = hasDorsales && dorsalSeleccionado ? (p.type === 'short' ? DORSAL_EXTRA_SHORTS : DORSAL_EXTRA) : 0;
     var totalPrice = price + dorsalCost;
 
-    return '<div class="product-card" id="card-' + p.id + '">'
+    // ── Cartel sin stock ──
+    var noStockBadge = noStockAtAll
+      ? '<div class="no-stock-notice">Sin stock disponible</div>'
+      : '';
+
+    return '<div class="product-card' + (noStockAtAll ? ' card-no-stock' : '') + '" id="card-' + p.id + '">'
       + '<div class="product-img-wrap" data-action="zoom" data-img="' + p.img + '" data-name="' + p.name.replace(/"/g, '&quot;') + '" title="Ver imagen ampliada">'
       + '<img src="' + p.img + '" alt="' + p.name + '" loading="lazy" onerror="this.style.display=\'none\'">'
       + badgeHtml
@@ -729,14 +760,16 @@ function renderProducts(filter, search, sort) {
       + '<div class="product-club">' + p.club + '</div>'
       + '<div class="product-name">' + p.name + '</div>'
       + versionToggleHtml
-      + infoTagHtml
       + '<div class="product-price" id="price-' + p.id + '">' + formatPrice(totalPrice) + ' <small>ARS</small></div>'
-      + '<div class="size-label">Talle:</div>'
-      + '<div class="size-grid">' + sizeBtns + '</div>'
-      + dorsalHtml
-      + '<button class="add-btn" data-action="add" data-id="' + p.id + '"' + (!canAdd ? ' disabled' : '') + '>'
-      + mkCartIcon() + ' ' + (canAdd ? 'Agregar al Carrito' : 'Seleccioná un talle')
-      + '</button>'
+      + (noStockAtAll
+          ? noStockBadge
+          : '<div class="size-label">Talle:</div>'
+            + '<div class="size-grid">' + sizeBtns + '</div>'
+            + dorsalHtml
+            + '<button class="add-btn" data-action="add" data-id="' + p.id + '"' + (!canAdd ? ' disabled' : '') + '>'
+            + mkCartIcon() + ' ' + (canAdd ? 'Agregar al Carrito' : 'Seleccioná un talle')
+            + '</button>'
+        )
       + '</div>'
       + '</div>';
   }).join('');
@@ -756,10 +789,8 @@ function setVersion(productId, version) {
   var isFan  = version === 'fan';
   var selNow = selectedSizes[productId] || null;
 
-  var sizesSet = {};
-  Object.keys(p.stock).forEach(function(k) { sizesSet[k] = true; });
-  Object.keys(p.stockJugador || {}).forEach(function(k) { sizesSet[k] = true; });
-  var allSizes = Object.keys(sizesSet);
+  // Talles: solo los de la versión activa
+  var allSizes = Object.keys(stock);
 
   // Botones versión
   card.querySelectorAll('[data-action="version"]').forEach(function(btn) {
@@ -785,7 +816,8 @@ function setVersion(productId, version) {
   var addBtn = card.querySelector('[data-action="add"]');
   addBtn.disabled = !canAdd;
   addBtn.innerHTML = mkCartIcon() + ' ' + (canAdd ? 'Agregar al Carrito' : 'Seleccioná un talle');
-  // Mostrar/ocultar dorsal según si hay talle seleccionado
+
+  // Dorsal
   var dorsalSection = document.getElementById('dorsal-section-' + productId);
   if (dorsalSection) dorsalSection.classList.toggle('dorsal-hidden', !selNow);
 }
@@ -806,10 +838,8 @@ function selectSize(productId, size) {
   var addBtn = card.querySelector('[data-action="add"]');
   addBtn.disabled = false;
   addBtn.innerHTML = mkCartIcon() + ' Agregar al Carrito';
-  // Mostrar indicador dorsal
   var dorsalSection = document.getElementById('dorsal-section-' + productId);
   if (dorsalSection) dorsalSection.classList.remove('dorsal-hidden');
-  // Abrir modal dorsal si tiene opciones
   if (p.dorsales && p.dorsales.length > 0) {
     openDorsalModal(productId);
   }
@@ -839,12 +869,10 @@ function openDorsalModal(productId) {
     document.getElementById('dorsalModalClose').addEventListener('click', closeDorsalModal);
   }
 
-  // Título y subtítulo con precio correcto según tipo
   document.getElementById('dorsalModalTitle').textContent = p.name;
   var dPrecioModal = p.type === 'short' ? DORSAL_EXTRA_SHORTS : DORSAL_EXTRA;
   document.getElementById('dorsalModalSubtitle').textContent = '+' + formatPrice(dPrecioModal) + ' · Opcional';
 
-  // Opciones
   var sel = selectedDorsal[productId];
   var listHtml = '<button class="dorsal-modal-item' + (!sel ? ' active' : '') + '" data-pid="' + productId + '" data-dkey="">'
     + '<span class="dorsal-modal-num">—</span>'
@@ -875,7 +903,6 @@ function closeDorsalModal() {
 function selectDorsal(productId, key, numero, nombre) {
   selectedDorsal[productId] = key ? { key: key, numero: numero, nombre: nombre } : null;
 
-  // Actualizar indicador en la card
   var indicator = document.getElementById('dorsal-section-' + productId);
   if (indicator) {
     var valEl = indicator.querySelector('.dorsal-indicator-val, .dorsal-indicator-none');
@@ -914,7 +941,6 @@ function updateDorsalPrice(productId) {
   var priceEl = document.getElementById('price-' + productId);
   if (priceEl) priceEl.innerHTML = formatPrice(base + extra) + ' <small>ARS</small>';
 }
-
 
 function addToCart(productId) {
   var p       = products.find(function(x) { return x.id === productId; });
@@ -1008,10 +1034,8 @@ function toggleCart() {
 
 function selectFilter(filter, btn) {
   currentFilter = filter;
-  // Actualizar opciones del dropdown
   document.querySelectorAll('.filter-option').forEach(function(b) { b.classList.remove('active'); });
   if (btn) btn.classList.add('active');
-  // Chip activo
   var chip = document.getElementById('activeFilterChip');
   var label = document.getElementById('activeFilterLabel');
   if (filter !== 'all') {
@@ -1056,13 +1080,11 @@ function closeFilterMenu() {
   if (wrap) wrap.classList.remove('open');
 }
 
-// Cerrar menú al hacer click fuera
 document.addEventListener('click', function(e) {
   var wrap = document.getElementById('filterMenuWrap');
   if (wrap && !wrap.contains(e.target)) closeFilterMenu();
 });
 
-// Compatibilidad con nav links viejos
 function filterProducts(filter, btn) { selectFilter(filter, document.querySelector('.filter-option[data-filter="' + filter + '"]')); }
 function filterFromNav(filter)        { selectFilter(filter, document.querySelector('.filter-option[data-filter="' + filter + '"]')); }
 
@@ -1113,7 +1135,6 @@ function wiggleCart() {
   var btn = document.querySelector('.cart-btn');
   if (!btn) return;
   btn.classList.remove('cart-wiggle');
-  // forzar reflow para reiniciar animación
   void btn.offsetWidth;
   btn.classList.add('cart-wiggle');
   setTimeout(function() { btn.classList.remove('cart-wiggle'); }, 700);
@@ -1128,11 +1149,9 @@ document.addEventListener('DOMContentLoaded', function() {
   injectLogos();
   renderProducts();
   updateCartUI();
-  // Ocultar botón clear al inicio
   var clearBtn = document.getElementById('searchClear');
   if (clearBtn) clearBtn.style.display = 'none';
 
-  // Un solo listener para todo el catálogo
   document.getElementById('catalog').addEventListener('click', function(e) {
     var el = e.target.closest('[data-action]');
     if (!el) return;
@@ -1146,7 +1165,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (action === 'add')     addToCart(id);
   });
 
-  // Listener del modal dorsal (delegado en body)
   document.body.addEventListener('click', function(e) {
     var el = e.target.closest('.dorsal-modal-item');
     if (!el) return;
@@ -1157,7 +1175,6 @@ document.addEventListener('DOMContentLoaded', function() {
     selectDorsal(pid, key, num, nom);
   });
 
-  // Un solo listener para el carrito
   document.getElementById('cartItems').addEventListener('click', function(e) {
     var el = e.target.closest('[data-cart-action]');
     if (!el) return;
@@ -1172,14 +1189,3 @@ document.addEventListener('DOMContentLoaded', function() {
     if (cart.length) openWhatsApp(buildCartWhatsAppMsg());
   });
 });
-
-
-
-
-
-
-
-
-
-
- 

@@ -1668,3 +1668,19 @@ footer {
   color: #15803d;
   margin-top: 2px;
 }
+/* ── SIN STOCK ── */
+.no-stock-notice {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--white-muted);
+  opacity: 0.6;
+  text-align: center;
+  padding: 10px 0 14px;
+}
+
+.card-no-stock .product-img-wrap img {
+  opacity: 0.55;
+  filter: grayscale(30%);
+}
