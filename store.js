@@ -82,7 +82,7 @@ const products = [
     img: 'img/cam-atlMadrid.jpeg',
     stock:        { S: false, M: false, L: true,  XL: false },
     stockJugador: { S: false, M: false, L: false, XL: false },
-    dorsales: [{numero: 19, nombre: "J. Alvarez"},] 
+    dorsales: [{numero: 19, nombre: "J. Alvarez"},]
   },
   {
     id: "cam-chelsea",
@@ -98,7 +98,7 @@ const products = [
     stockJugador: { S: false, M: false, L: false, XL: false },
     dorsales: [
       { numero: 20, nombre: 'Palmer' },
-      { numero:  5, nombre: 'Enzo' },]
+      { numero:  5, nombre: 'Enzo' }]
   },
   {
     id: "cam-man-united-blanca",
@@ -155,7 +155,7 @@ const products = [
     stock:        { S: false, M: true,  L: true,  XL: false },
     stockJugador: { S: false, M: false, L: false, XL: false },
     dorsales: [
-      { numero: 10, nombre: 'Lautaro' },]
+      { numero: 10, nombre: 'Lautaro' }]
   },
   {
     id: "cam-roma-visitante",
@@ -182,7 +182,7 @@ const products = [
     badgeType: 'new',
     img: 'img/Camiseta-RiverAlternativa.jpeg',
     stock:        { S: false, M: false, L: false, XL: false, XXXL: false },
-    stockJugador: { S: false, M: false, L: false, XL: false, XXL: false  },
+    stockJugador: { S: false, M: false, L: false, XL: false, XXL: true  },
     dorsales: []
   },
   {
@@ -260,7 +260,7 @@ const products = [
     name: 'Short Barcelona Negro',
     club: 'FC Barcelona',
     type: 'short',
-    tags: [],
+    tags: ['barcelona'],
     price: 28000,
     badge: 'new',
     badgeType: 'new',
@@ -274,7 +274,7 @@ const products = [
     name: 'Short Barcelona Azul',
     club: 'FC Barcelona',
     type: 'short',
-    tags: [],
+    tags: ['barcelona'],
     price: 28000,
     badge: 'new',
     badgeType: 'new',
@@ -302,7 +302,7 @@ const products = [
     name: 'Short Chelsea Negro CFC',
     club: 'Chelsea FC',
     type: 'short',
-    tags: [],
+    tags: ['chelsea'],
     price: 28000,
     badge: 'new',
     badgeType: 'new',
@@ -316,7 +316,7 @@ const products = [
     name: 'Short Chelsea Verde / Rojo',
     club: 'Chelsea FC',
     type: 'short',
-    tags: [],
+    tags: ['chelsea'],
     price: 28000,
     badge: 'New',
     badgeType: 'new',
@@ -330,7 +330,7 @@ const products = [
     name: 'Short Chelsea Blanco Nike',
     club: 'Chelsea FC',
     type: 'short',
-    tags: [],
+    tags: ['chelsea'],
     price: 28000,
     badge: 'new',
     badgeType: 'new',
@@ -344,7 +344,7 @@ const products = [
     name: 'Short Chelsea Azul / Rojo',
     club: 'Chelsea FC',
     type: 'short',
-    tags: [],
+    tags: ['chelsea'],
     price: 28000,
     badge: 'New',
     badgeType: 'new',
@@ -358,7 +358,7 @@ const products = [
     name: 'Short Chelsea Negro/Amarillo',
     club: 'Chelsea FC',
     type: 'short',
-    tags: [],
+    tags: ['chelsea'],
     price: 28000,
     badge: 'new',
     badgeType: 'new',
@@ -372,7 +372,7 @@ const products = [
     name: 'Short Inter Milán Negro/Oro',
     club: 'Inter de Milán',
     type: 'short',
-    tags: [],
+    tags: ['inter'],
     price: 28000,
     badge: 'new',
     badgeType: 'new',
@@ -428,7 +428,7 @@ const products = [
     name: 'Short PSG Azul Marino',
     club: 'Paris Saint-Germain',
     type: 'short',
-    tags: [],
+    tags: ['PSG'],
     price: 28000,
     badge: 'new',
     badgeType: 'new',
@@ -442,7 +442,7 @@ const products = [
     name: 'Short PSG Negro/Rosa',
     club: 'Paris Saint-Germain',
     type: 'short',
-    tags: [],
+    tags: ['PSG'],
     price: 28000,
     badge: 'new',
     badgeType: 'new',
@@ -512,11 +512,13 @@ const products = [
 // ── Estado ───────────────────────────────────────────────
 const selectedSizes    = {};
 const selectedVersions = {};
-const selectedDorsal   = {}; // { productId: { key, numero, nombre } | null }
+const selectedDorsal   = {};
 let cart = [];
 let currentFilter = 'all';
 let currentSort   = 'default';
 let currentSearch = '';
+// [MEJORA] Filtro por club
+let currentClub = 'all';
 
 // ── Helpers ──────────────────────────────────────────────
 function formatPrice(p) {
@@ -530,9 +532,6 @@ function getPrice(p, ver) {
   var extra = p.type === 'short' ? JUGADOR_EXTRA_SHORT : JUGADOR_EXTRA_CAMISETA;
   return p.price + extra;
 }
-function getJugadorExtra(p) {
-  return p.type === 'short' ? JUGADOR_EXTRA_SHORT : JUGADOR_EXTRA_CAMISETA;
-}
 function getStock(p, ver) {
   return ver === 'jugador' ? (p.stockJugador || {}) : (p.stock || {});
 }
@@ -545,19 +544,48 @@ function getDorsalPrice(id) {
   return (p && p.type === 'short') ? DORSAL_EXTRA_SHORTS : DORSAL_EXTRA;
 }
 
-// ── Chequea si una versión tiene al menos un talle disponible ──
+// [MEJORA] Chequea si una versión tiene al menos un talle disponible
 function hasAnyStock(p, ver) {
   var stock = getStock(p, ver);
   return Object.keys(stock).some(function(k) { return stock[k] === true; });
 }
 
-// ── Versión inicial: fan si tiene stock, si no jugador, si no ninguna ──
+// [MEJORA] Versión inicial: fan si tiene stock, si no jugador
 function resolveInitialVersion(p) {
   if (p.tags.indexOf('retro') >= 0) return 'fan';
   if (selectedVersions[p.id]) return selectedVersions[p.id];
   if (hasAnyStock(p, 'fan')) return 'fan';
   if (hasAnyStock(p, 'jugador')) return 'jugador';
-  return 'fan'; // sin stock en ninguna
+  return 'fan';
+}
+
+// [MEJORA] Chequea si el producto tiene stock en cualquier versión
+function productHasAnyStock(p) {
+  return hasAnyStock(p, 'fan') || hasAnyStock(p, 'jugador');
+}
+
+// [MEJORA] Filtro por club: match flexible contra club y tags
+function matchesClub(p, club) {
+  if (club === 'all') return true;
+  var clubLower = club.toLowerCase();
+  var productClub = (p.club || '').toLowerCase();
+  var productTags = (p.tags || []).map(function(t) { return t.toLowerCase(); });
+  // Match contra club
+  if (productClub.indexOf(clubLower) >= 0) return true;
+  // Match contra tags
+  if (productTags.some(function(t) { return t.indexOf(clubLower) >= 0; })) return true;
+  // Aliases especiales
+  var aliases = {
+    'barcelona': ['barca', 'barsa', 'fc barcelona'],
+    'real madrid': ['real madrid'],
+    'chelsea': ['chelsea fc'],
+    'argentina': ['argentina'],
+    'inter': ['inter', 'inter de milán', 'inter milan'],
+    'psg': ['paris', 'paris sg', 'paris saint-germain', 'psg']
+  };
+  var aliasList = aliases[clubLower] || [];
+  if (aliasList.some(function(a) { return productClub.indexOf(a) >= 0; })) return true;
+  return false;
 }
 
 function mkCartIcon() {
@@ -592,7 +620,7 @@ function closeImageModal() {
   if (m) m.classList.remove('open');
   document.body.style.overflow = '';
 }
-document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeImageModal(); });
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeImageModal(); closeDorsalModal(); } });
 
 // ── WhatsApp ─────────────────────────────────────────────
 function openWhatsApp(customMsg) {
@@ -620,6 +648,37 @@ function buildCartWhatsAppMsg() {
   return msg;
 }
 
+// ── [MEJORA] Filtro por club ──────────────────────────────
+// Lista de clubes con sus labels para los chips
+var CLUB_FILTERS = [
+  { key: 'all',        label: 'Todos' },
+  { key: 'argentina',  label: '🇦🇷 Argentina' },
+  { key: 'barcelona',  label: 'Barcelona' },
+  { key: 'real madrid',label: 'Real Madrid' },
+  { key: 'chelsea',    label: 'Chelsea' },
+  { key: 'inter',      label: 'Inter' },
+  { key: 'psg',        label: 'PSG' }
+];
+
+// Renderiza los chips de club en el contenedor #clubFilters
+function renderClubChips() {
+  var container = document.getElementById('clubFilters');
+  if (!container) return;
+  container.innerHTML = CLUB_FILTERS.map(function(f) {
+    var isActive = currentClub === f.key;
+    return '<button class="club-chip' + (isActive ? ' active' : '') + '" data-club="' + f.key + '">'
+      + f.label
+      + '</button>';
+  }).join('');
+}
+
+// Seleccionar club desde los chips
+function selectClub(club) {
+  currentClub = club;
+  renderClubChips();
+  renderProducts();
+}
+
 // ── Render catálogo ──────────────────────────────────────
 function renderProducts(filter, search, sort) {
   if (filter !== undefined) currentFilter = filter;
@@ -635,7 +694,12 @@ function renderProducts(filter, search, sort) {
   else if (currentFilter === 'argentina') filtered = products.filter(function(p) { return p.tags.indexOf('argentina') >= 0; });
   else if (currentFilter === 'retro')     filtered = products.filter(function(p) { return p.tags.indexOf('retro') >= 0; });
 
-  // 2. Búsqueda
+  // 2. [MEJORA] Filtro por club
+  if (currentClub !== 'all') {
+    filtered = filtered.filter(function(p) { return matchesClub(p, currentClub); });
+  }
+
+  // 3. Búsqueda
   if (currentSearch.trim()) {
     var q = currentSearch.trim().toLowerCase();
     filtered = filtered.filter(function(p) {
@@ -646,67 +710,59 @@ function renderProducts(filter, search, sort) {
     });
   }
 
-  // 3. Ordenamiento
+  // 4. Ordenamiento
   filtered = filtered.slice();
   if (currentSort === 'price-asc')  filtered.sort(function(a,b) { return a.price - b.price; });
   if (currentSort === 'price-desc') filtered.sort(function(a,b) { return b.price - a.price; });
   if (currentSort === 'name-asc')   filtered.sort(function(a,b) { return a.name.localeCompare(b.name, 'es'); });
   if (currentSort === 'name-desc')  filtered.sort(function(a,b) { return b.name.localeCompare(a.name, 'es'); });
 
-  // Sin resultados de búsqueda
+  // [MEJORA] Productos sin stock siempre al final
+  filtered.sort(function(a, b) {
+    var aStock = productHasAnyStock(a) ? 0 : 1;
+    var bStock = productHasAnyStock(b) ? 0 : 1;
+    return aStock - bStock;
+  });
+
+  // Sin resultados
   if (!filtered.length) {
     catalog.innerHTML = '<div class="no-results">'
       + '<div class="no-results-icon">🔍</div>'
-      + '<p>No encontramos productos para <strong>"' + currentSearch + '"</strong></p>'
-      + '<button onclick="clearSearch()">Ver todos los productos</button>'
+      + '<p>No encontramos productos' + (currentSearch ? ' para <strong>"' + currentSearch + '"</strong>' : '') + '</p>'
+      + '<button onclick="clearSearch(); selectClub(\'all\')">Ver todos los productos</button>'
       + '</div>';
     return;
   }
 
   catalog.innerHTML = filtered.map(function(p) {
     var isRetro = p.tags.indexOf('retro') >= 0;
-
-    // Determinar versión activa
     var ver = isRetro ? 'fan' : resolveInitialVersion(p);
-    // Guardar en estado si aún no tiene versión asignada
-    if (!isRetro && !selectedVersions[p.id]) {
-      selectedVersions[p.id] = ver;
-    }
+    if (!isRetro && !selectedVersions[p.id]) selectedVersions[p.id] = ver;
 
     var stock  = getStock(p, ver);
     var sel    = selectedSizes[p.id] || null;
     var price  = isRetro ? p.price : getPrice(p, ver);
     var isFan  = ver === 'fan';
 
-    // ── Stock checks para el toggle ──
     var fanHasStock     = !isRetro && hasAnyStock(p, 'fan');
     var jugadorHasStock = !isRetro && hasAnyStock(p, 'jugador');
     var noStockAtAll    = !hasAnyStock(p, 'fan') && !hasAnyStock(p, 'jugador');
+    // [MEJORA] Solo talles disponibles (true) de la versión activa
+    var allSizes        = Object.keys(stock).filter(function(sz) { return stock[sz] === true; });
+    var canAdd          = sel && (stock[sel] === true);
 
-    // ── Talles: solo los de la versión activa ──
-    var allSizes = Object.keys(stock);
-
-    var canAdd = sel && (stock[sel] === true);
-
-    // ── Botones de talle o mensaje sin stock ──
-    var sizeBtns;
-    if (noStockAtAll) {
-      sizeBtns = ''; // se muestra el cartel abajo
-    } else {
-      sizeBtns = allSizes.map(function(sz) {
-        var avail = stock[sz] === true;
-        return '<button'
-          + ' class="size-btn' + (avail ? '' : ' out-of-stock') + (sel === sz ? ' selected' : '') + '"'
-          + ' data-action="size" data-id="' + p.id + '" data-sz="' + sz + '"'
-          + (avail ? '' : ' disabled')
-          + ' title="' + (avail ? sz : sz + ' — Agotado') + '"'
-          + '>' + sz + '</button>';
-      }).join('');
-    }
+    // Botones de talle — solo los disponibles
+    var sizeBtns = noStockAtAll ? '' : allSizes.map(function(sz) {
+      return '<button'
+        + ' class="size-btn' + (sel === sz ? ' selected' : '') + '"'
+        + ' data-action="size" data-id="' + p.id + '" data-sz="' + sz + '"'
+        + ' title="' + sz + '"'
+        + '>' + sz + '</button>';
+    }).join('');
 
     var badgeHtml = p.badge ? '<div class="product-badge ' + (p.badgeType || '') + '">' + p.badge + '</div>' : '';
 
-    // ── Toggle de versión: solo mostrar botones con stock ──
+    // [MEJORA] Toggle de versión con tooltip explicativo
     var versionToggleHtml = '';
     if (!isRetro && (fanHasStock || jugadorHasStock)) {
       versionToggleHtml = '<div class="version-toggle">';
@@ -720,10 +776,13 @@ function renderProducts(filter, search, sort) {
           + '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>'
           + ' Jugador</button>';
       }
+      // [MEJORA] Ícono ⓘ con tooltip dinámico según versión activa
+      var verInfoText = isFan ? 'Tela estándar · confección regular' : 'Tela técnica premium · corte ajustado';
+      versionToggleHtml += '<span class="version-info-icon' + (isFan ? ' fan' : ' jugador') + '" id="ver-info-' + p.id + '" title="' + verInfoText + '">ⓘ</span>';
       versionToggleHtml += '</div>';
     }
 
-    // ── Dorsal ──
+    // Dorsal
     var dorsalSeleccionado = selectedDorsal[p.id] || null;
     var hasDorsales = p.dorsales && p.dorsales.length > 0;
     var dorsalHtml = '';
@@ -745,7 +804,7 @@ function renderProducts(filter, search, sort) {
     var dorsalCost = hasDorsales && dorsalSeleccionado ? (p.type === 'short' ? DORSAL_EXTRA_SHORTS : DORSAL_EXTRA) : 0;
     var totalPrice = price + dorsalCost;
 
-    // ── Cartel sin stock ──
+    // [MEJORA] Cartel sin stock discreto
     var noStockBadge = noStockAtAll
       ? '<div class="no-stock-notice">Sin stock disponible</div>'
       : '';
@@ -788,38 +847,42 @@ function setVersion(productId, version) {
   if (!card) return;
   var isFan  = version === 'fan';
   var selNow = selectedSizes[productId] || null;
+  // [MEJORA] Solo talles disponibles de la versión activa
+  var allSizes = Object.keys(stock).filter(function(sz) { return stock[sz] === true; });
 
-  // Talles: solo los de la versión activa
-  var allSizes = Object.keys(stock);
-
-  // Botones versión
   card.querySelectorAll('[data-action="version"]').forEach(function(btn) {
     btn.classList.toggle('active', btn.dataset.ver === version);
   });
 
-  // Precio
   card.querySelector('.product-price').innerHTML = formatPrice(getPrice(p, version)) + ' <small>ARS</small>';
 
-  // Talles
   card.querySelector('.size-grid').innerHTML = allSizes.map(function(sz) {
-    var avail = stock[sz] === true;
     return '<button'
-      + ' class="size-btn' + (avail ? '' : ' out-of-stock') + (selNow === sz ? ' selected' : '') + '"'
+      + ' class="size-btn' + (selNow === sz ? ' selected' : '') + '"'
       + ' data-action="size" data-id="' + productId + '" data-sz="' + sz + '"'
-      + (avail ? '' : ' disabled')
-      + ' title="' + (avail ? sz : sz + ' — Agotado') + '"'
+      + ' title="' + sz + '"'
       + '>' + sz + '</button>';
   }).join('');
 
-  // Botón agregar
   var canAdd = selNow && (stock[selNow] === true);
   var addBtn = card.querySelector('[data-action="add"]');
   addBtn.disabled = !canAdd;
   addBtn.innerHTML = mkCartIcon() + ' ' + (canAdd ? 'Agregar al Carrito' : 'Seleccioná un talle');
 
-  // Dorsal
   var dorsalSection = document.getElementById('dorsal-section-' + productId);
   if (dorsalSection) dorsalSection.classList.toggle('dorsal-hidden', !selNow);
+
+  // [MEJORA] Actualizar ícono ⓘ con info de la versión activa
+  var verInfoEl = document.getElementById('ver-info-' + productId);
+  if (verInfoEl) {
+    if (version === 'fan') {
+      verInfoEl.className = 'version-info-icon fan';
+      verInfoEl.title = 'Tela estándar · confección regular';
+    } else {
+      verInfoEl.className = 'version-info-icon jugador';
+      verInfoEl.title = 'Tela técnica premium · corte ajustado';
+    }
+  }
 }
 
 // ── Seleccionar talle ────────────────────────────────────
@@ -840,9 +903,7 @@ function selectSize(productId, size) {
   addBtn.innerHTML = mkCartIcon() + ' Agregar al Carrito';
   var dorsalSection = document.getElementById('dorsal-section-' + productId);
   if (dorsalSection) dorsalSection.classList.remove('dorsal-hidden');
-  if (p.dorsales && p.dorsales.length > 0) {
-    openDorsalModal(productId);
-  }
+  if (p.dorsales && p.dorsales.length > 0) openDorsalModal(productId);
 }
 
 // ── Dorsal Modal ─────────────────────────────────────────
@@ -991,7 +1052,16 @@ function changeQty(key, delta) {
 function updateCartUI() {
   var total    = cart.reduce(function(s, i) { return s + i.price * i.qty; }, 0);
   var totalQty = cart.reduce(function(s, i) { return s + i.qty; }, 0);
-  document.getElementById('cartCount').textContent = totalQty;
+
+  // [MEJORA] Badge del carrito: ocultar cuando está vacío, mostrar con animación cuando hay ítems
+  var countEl = document.getElementById('cartCount');
+  countEl.textContent = totalQty;
+  if (totalQty > 0) {
+    countEl.classList.add('visible');
+  } else {
+    countEl.classList.remove('visible');
+  }
+
   document.getElementById('cartItemCount').textContent = totalQty
     ? '(' + totalQty + ' ítem' + (totalQty !== 1 ? 's' : '') + ')' : '';
   document.getElementById('cartTotal').textContent = formatPrice(total);
@@ -1147,8 +1217,17 @@ function injectLogos() {
 // ── Init ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
   injectLogos();
+
+  // [MEJORA] Renderizar chips de club y escuchar clicks
+  renderClubChips();
+  document.getElementById('clubFilters').addEventListener('click', function(e) {
+    var btn = e.target.closest('.club-chip');
+    if (btn) selectClub(btn.dataset.club);
+  });
+
   renderProducts();
   updateCartUI();
+
   var clearBtn = document.getElementById('searchClear');
   if (clearBtn) clearBtn.style.display = 'none';
 
@@ -1168,11 +1247,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.body.addEventListener('click', function(e) {
     var el = e.target.closest('.dorsal-modal-item');
     if (!el) return;
-    var pid  = el.dataset.pid;
-    var key  = el.dataset.dkey;
-    var num  = el.dataset.dnum;
-    var nom  = el.dataset.dnom;
-    selectDorsal(pid, key, num, nom);
+    selectDorsal(el.dataset.pid, el.dataset.dkey, el.dataset.dnum, el.dataset.dnom);
   });
 
   document.getElementById('cartItems').addEventListener('click', function(e) {
