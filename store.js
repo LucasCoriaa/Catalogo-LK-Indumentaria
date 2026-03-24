@@ -509,6 +509,23 @@ const products = [
   }
 ];
 
+// ── Admin: cargar productos desde localStorage ───────────────────────────────
+// Si el admin guardó cambios, se usan esos productos en lugar del array anterior.
+(function() {
+  try {
+    var stored = localStorage.getItem('lk_products');
+    if (stored) {
+      var parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        products.length = 0;
+        parsed.forEach(function(p) { products.push(p); });
+      }
+    }
+  } catch(e) {
+    console.warn('LK Admin: error al cargar productos desde localStorage', e);
+  }
+})();
+
 // ── Estado ───────────────────────────────────────────────
 const selectedSizes    = {};
 const selectedVersions = {};
@@ -570,11 +587,8 @@ function matchesClub(p, club) {
   var clubLower = club.toLowerCase();
   var productClub = (p.club || '').toLowerCase();
   var productTags = (p.tags || []).map(function(t) { return t.toLowerCase(); });
-  // Match contra club
   if (productClub.indexOf(clubLower) >= 0) return true;
-  // Match contra tags
   if (productTags.some(function(t) { return t.indexOf(clubLower) >= 0; })) return true;
-  // Aliases especiales
   var aliases = {
     'barcelona': ['barca', 'barsa', 'fc barcelona'],
     'real madrid': ['real madrid'],
@@ -649,7 +663,6 @@ function buildCartWhatsAppMsg() {
 }
 
 // ── [MEJORA] Filtro por club ──────────────────────────────
-// Lista de clubes con sus labels para los chips
 var CLUB_FILTERS = [
   { key: 'all',        label: 'Todos' },
   { key: 'argentina',  label: '🇦🇷 Argentina' },
@@ -660,7 +673,6 @@ var CLUB_FILTERS = [
   { key: 'psg',        label: 'PSG' }
 ];
 
-// Renderiza los chips de club en el contenedor #clubFilters
 function renderClubChips() {
   var container = document.getElementById('clubFilters');
   if (!container) return;
@@ -672,7 +684,6 @@ function renderClubChips() {
   }).join('');
 }
 
-// Seleccionar club desde los chips
 function selectClub(club) {
   currentClub = club;
   renderClubChips();
@@ -687,19 +698,16 @@ function renderProducts(filter, search, sort) {
 
   var catalog = document.getElementById('catalog');
 
-  // 1. Filtro por categoría
   var filtered = products;
   if      (currentFilter === 'camiseta')  filtered = products.filter(function(p) { return p.type === 'camiseta'; });
   else if (currentFilter === 'short')     filtered = products.filter(function(p) { return p.type === 'short'; });
   else if (currentFilter === 'argentina') filtered = products.filter(function(p) { return p.tags.indexOf('argentina') >= 0; });
   else if (currentFilter === 'retro')     filtered = products.filter(function(p) { return p.tags.indexOf('retro') >= 0; });
 
-  // 2. [MEJORA] Filtro por club
   if (currentClub !== 'all') {
     filtered = filtered.filter(function(p) { return matchesClub(p, currentClub); });
   }
 
-  // 3. Búsqueda
   if (currentSearch.trim()) {
     var q = currentSearch.trim().toLowerCase();
     filtered = filtered.filter(function(p) {
@@ -710,21 +718,18 @@ function renderProducts(filter, search, sort) {
     });
   }
 
-  // 4. Ordenamiento
   filtered = filtered.slice();
   if (currentSort === 'price-asc')  filtered.sort(function(a,b) { return a.price - b.price; });
   if (currentSort === 'price-desc') filtered.sort(function(a,b) { return b.price - a.price; });
   if (currentSort === 'name-asc')   filtered.sort(function(a,b) { return a.name.localeCompare(b.name, 'es'); });
   if (currentSort === 'name-desc')  filtered.sort(function(a,b) { return b.name.localeCompare(a.name, 'es'); });
 
-  // [MEJORA] Productos sin stock siempre al final
   filtered.sort(function(a, b) {
     var aStock = productHasAnyStock(a) ? 0 : 1;
     var bStock = productHasAnyStock(b) ? 0 : 1;
     return aStock - bStock;
   });
 
-  // Sin resultados
   if (!filtered.length) {
     catalog.innerHTML = '<div class="no-results">'
       + '<div class="no-results-icon">🔍</div>'
@@ -747,11 +752,9 @@ function renderProducts(filter, search, sort) {
     var fanHasStock     = !isRetro && hasAnyStock(p, 'fan');
     var jugadorHasStock = !isRetro && hasAnyStock(p, 'jugador');
     var noStockAtAll    = !hasAnyStock(p, 'fan') && !hasAnyStock(p, 'jugador');
-    // [MEJORA] Solo talles disponibles (true) de la versión activa
     var allSizes        = Object.keys(stock).filter(function(sz) { return stock[sz] === true; });
     var canAdd          = sel && (stock[sel] === true);
 
-    // Botones de talle — solo los disponibles
     var sizeBtns = noStockAtAll ? '' : allSizes.map(function(sz) {
       return '<button'
         + ' class="size-btn' + (sel === sz ? ' selected' : '') + '"'
@@ -762,7 +765,6 @@ function renderProducts(filter, search, sort) {
 
     var badgeHtml = p.badge ? '<div class="product-badge ' + (p.badgeType || '') + '">' + p.badge + '</div>' : '';
 
-    // [MEJORA] Toggle de versión con tooltip explicativo
     var versionToggleHtml = '';
     if (!isRetro && (fanHasStock || jugadorHasStock)) {
       versionToggleHtml = '<div class="version-toggle">';
@@ -776,13 +778,11 @@ function renderProducts(filter, search, sort) {
           + '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>'
           + ' Jugador</button>';
       }
-      // [MEJORA] Ícono ⓘ con tooltip dinámico según versión activa
       var verInfoText = isFan ? 'Tela estándar · confección regular' : 'Tela técnica premium · corte ajustado';
       versionToggleHtml += '<span class="version-info-icon' + (isFan ? ' fan' : ' jugador') + '" id="ver-info-' + p.id + '" title="' + verInfoText + '">ⓘ</span>';
       versionToggleHtml += '</div>';
     }
 
-    // Dorsal
     var dorsalSeleccionado = selectedDorsal[p.id] || null;
     var hasDorsales = p.dorsales && p.dorsales.length > 0;
     var dorsalHtml = '';
@@ -804,7 +804,6 @@ function renderProducts(filter, search, sort) {
     var dorsalCost = hasDorsales && dorsalSeleccionado ? (p.type === 'short' ? DORSAL_EXTRA_SHORTS : DORSAL_EXTRA) : 0;
     var totalPrice = price + dorsalCost;
 
-    // [MEJORA] Cartel sin stock discreto
     var noStockBadge = noStockAtAll
       ? '<div class="no-stock-notice">Sin stock disponible</div>'
       : '';
@@ -847,7 +846,6 @@ function setVersion(productId, version) {
   if (!card) return;
   var isFan  = version === 'fan';
   var selNow = selectedSizes[productId] || null;
-  // [MEJORA] Solo talles disponibles de la versión activa
   var allSizes = Object.keys(stock).filter(function(sz) { return stock[sz] === true; });
 
   card.querySelectorAll('[data-action="version"]').forEach(function(btn) {
@@ -872,7 +870,6 @@ function setVersion(productId, version) {
   var dorsalSection = document.getElementById('dorsal-section-' + productId);
   if (dorsalSection) dorsalSection.classList.toggle('dorsal-hidden', !selNow);
 
-  // [MEJORA] Actualizar ícono ⓘ con info de la versión activa
   var verInfoEl = document.getElementById('ver-info-' + productId);
   if (verInfoEl) {
     if (version === 'fan') {
@@ -1053,7 +1050,6 @@ function updateCartUI() {
   var total    = cart.reduce(function(s, i) { return s + i.price * i.qty; }, 0);
   var totalQty = cart.reduce(function(s, i) { return s + i.qty; }, 0);
 
-  // [MEJORA] Badge del carrito: ocultar cuando está vacío, mostrar con animación cuando hay ítems
   var countEl = document.getElementById('cartCount');
   countEl.textContent = totalQty;
   if (totalQty > 0) {
@@ -1218,7 +1214,6 @@ function injectLogos() {
 document.addEventListener('DOMContentLoaded', function() {
   injectLogos();
 
-  // [MEJORA] Renderizar chips de club y escuchar clicks
   renderClubChips();
   document.getElementById('clubFilters').addEventListener('click', function(e) {
     var btn = e.target.closest('.club-chip');
